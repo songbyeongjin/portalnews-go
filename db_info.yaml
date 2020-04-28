@@ -1,0 +1,6 @@
+dialect: postgres
+host: portalnews.cmoc8qaengzg.ap-northeast-1.rds.amazonaws.com
+db_name: 5432
+port: song
+user: portalnews
+password: portalnews
