@@ -11,9 +11,14 @@ import (
 	"os"
 	"portal_news/api_handler"
 	"portal_news/db"
+	"portal_news/service"
 )
 
 func main(){
+
+	service.CrawlNateNews()
+
+
 	// *** Set Db
 
 	setDb()
