@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+{{template "header" .}}
+</head>
+
+<body id="page-top">
+  {{template "navigation" .}}
+  <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="nate">
+    <div class="w-100">
+      <h2 class="mb-2">{{(index . 0).Portal}}</h2>
+      <!--<button type="button" id="nate_refresh" class="btn btn-danger mb-2">News Refresh</button> -->
+      <button type="button" id="nate_refresh" class="btn btn-danger mb-2" onclick="window.location.href='/second/index#nate'">News Refresh</button>
+      <!--<%= link_to "RE", 'second/index', class: 'btn btn-danger mb-2', method: :get, remote: true %> -->
+
+      {{range .}}
+           <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-2">
+             <div class="resume-content">
+               <h5 class="mb-0" onclick="window.open('{{.Url}}', '_blank')">{{.Title}}</h5>
+               <div class="subheading cor">{{.Press}}</div>
+               <p>{{.Content}}</p>
+             </div>
+             <div class="resume-date text-md-right">
+               <span class="text-primary">{{.Date.Format "2006-01-02"}}</span>
+             </div>
+           </div>
+      {{end}}
+    </div>
+  </section>
+</body>
+
+</html>
