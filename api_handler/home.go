@@ -10,7 +10,8 @@ import (
 
 func Home(c *gin.Context){
 	/*
-		newsObj := model.News{
+		nePortal:"song",
+			wsObj := model.News{
 			Id: 500,
 			Title:"titleTest",
 			Content:"contentTest",
@@ -18,7 +19,6 @@ func Home(c *gin.Context){
 			Writer:"writerTest",
 			Date:time.Now(),
 			Url:"wwwa.test.com",
-			Portal:"song",
 			CreatedAt:time.Now(),
 			UpdatedAt:time.Now(),
 		}*/
@@ -28,6 +28,6 @@ func Home(c *gin.Context){
 	db.Instance.Find(&news)
 	fmt.Println(news)
 
-	c.Header("Content-Type", "application/json")
-	c.HTML(http.StatusOK, "home.tmpl",&news)
+	//c.Header("Content-Type", "application/json")
+	c.HTML(http.StatusOK, "home",&news)
 }
