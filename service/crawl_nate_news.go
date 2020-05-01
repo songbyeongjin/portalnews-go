@@ -10,22 +10,23 @@ import (
 )
 
 const(
-	NewsCount = 20
-
-	HttpsUrl = `https://`
-	NateNewsRootUrl         = HttpsUrl+`news.nate.com/rank/interest?sc=all&p=day&date=20999999`
-	CssSelectorFirstToFifth = ".mlt01 a"
-	CssSelectorSixthTo      = ".mduSubject a"
-	CssSelectorTitle      = ".articleSubecjt"
-	CssSelectorContent      = "#realArtcContents"
-	CssSelectorPress      = ".articleInfo .medium"
-	CssSelectorDate      = ".firstDate em"
-	CssSelectorOrCondition  = `, `
-	SetFieldCount = 4 //Title,Content,Press,Date
+	newsCount = 20
+	HttpsUrl                = `https://`
+	nateNewsRootUrl         = HttpsUrl +`news.nate.com/rank/interest?sc=all&p=day&date=20999999`
+	cssSelectorFirstToFifth = ".mlt01 a"
+	cssSelectorSixthTo      = ".mduSubject a"
+	cssSelectorTitle        = ".articleSubecjt"
+	cssSelectorContent      = "#realArtcContents"
+	cssSelectorPress        = ".articleInfo .medium"
+	cssSelectorDate         = ".firstDate em"
+	cssSelectorOrCondition  = `, `
+	setFieldCount           = 4 //Title,Content,Press,Date
+	layoutYYYYMMDD          = "2006-01-02"
 )
 
-func CrawlNateNews(){
-	nateNewsUrls := getNateNewsUrls(NateNewsRootUrl)
+func CrawlNaverNews(){
+	fmt.Println("schedule call" + time.Now().String())
+	nateNewsUrls := getNateNewsUrls(nateNewsRootUrl)
 	nateNews := getNateNews(nateNewsUrls)
 
 	for _,news := range nateNews{
@@ -35,54 +36,56 @@ func CrawlNateNews(){
 
 //get Nate News url From nate root url
 func getNateNewsUrls(nateRootUrl string) []string{
-	urls := make([]string,0,NewsCount)
+	urls := make([]string,0, newsCount)
 	c := colly.NewCollector()
-	var wg2 sync.WaitGroup
-	wg2.Add(20)
+	var wg sync.WaitGroup
+	wg.Add(newsCount)
 
 	// Find and visit all links
-	c.OnHTML(CssSelectorFirstToFifth + CssSelectorOrCondition + CssSelectorSixthTo, func(e *colly.HTMLElement) {
+	c.OnHTML(cssSelectorFirstToFifth + cssSelectorOrCondition + cssSelectorSixthTo, func(e *colly.HTMLElement) {
 		//e.Request.Visit(e.Attr("href"))
-		if len(urls) < NewsCount{
-			title := e.Attr("href")[2:]
+		if len(urls) < newsCount {
+			title := e.Attr("href")[2:]//delete string("//") in title
 			urls = append(urls, title)
-			wg2.Done()
+			wg.Done()
 		}
 	})
 
 	c.Visit(nateRootUrl)
-	wg2.Wait()
+	wg.Wait()
 
 	return urls
 }
 
 //get NateNews Object from nate urls
 func getNateNews(nateNewsUrls []string) []model.News {
-	nateNews := make([]model.News, NewsCount, NewsCount)
+	nateNews := make([]model.News, newsCount, newsCount)
 
-	cSlice := make([]*colly.Collector, NewsCount, NewsCount)
+	cSlice := make([]*colly.Collector, newsCount, newsCount)
 	var wg sync.WaitGroup
 
-	for i := 0; i < NewsCount; i++ {
+	//Set callback
+	for i := 0; i < newsCount; i++ {
 		inIndex := i
 		cSlice[i] = colly.NewCollector()
-		cSlice[i].OnHTML(CssSelectorTitle, func(e *colly.HTMLElement) {
+		cSlice[i].OnHTML(cssSelectorTitle, func(e *colly.HTMLElement) {
 			nateNews[inIndex].Title = e.Text
 			wg.Done()
 		})
-		cSlice[i].OnHTML(CssSelectorContent, func(e *colly.HTMLElement) {
+		cSlice[i].OnHTML(cssSelectorContent, func(e *colly.HTMLElement) {
 			space := regexp.MustCompile(`\s+`)
 			str := space.ReplaceAllString(e.Text[:200]+"...", " ")
 			nateNews[inIndex].Content = str
 
 			wg.Done()
 		})
-		cSlice[i].OnHTML(CssSelectorPress, func(e *colly.HTMLElement) {
+		cSlice[i].OnHTML(cssSelectorPress, func(e *colly.HTMLElement) {
 			nateNews[inIndex].Press = e.Text
 			wg.Done()
 		})
-		cSlice[i].OnHTML(CssSelectorDate, func(e *colly.HTMLElement) {
-			nateNews[inIndex].Date, _ = time.Parse("2006-01-02", e.Text[:10])
+		cSlice[i].OnHTML(cssSelectorDate, func(e *colly.HTMLElement) {
+
+			nateNews[inIndex].Date, _ = time.Parse(layoutYYYYMMDD, e.Text[:10])
 			wg.Done()
 		})
 	}
@@ -93,7 +96,7 @@ func getNateNews(nateNewsUrls []string) []model.News {
 		inUrl := url
 		inIndex := i
 
-		wg.Add(1 * SetFieldCount)
+		wg.Add(1 * setFieldCount)
 		go func(c *colly.Collector) {
 			c.Visit(HttpsUrl + inUrl)
 		}(cSlice[inIndex]) // i+1 is ranking

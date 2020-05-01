@@ -12,11 +12,6 @@ func Nate(c *gin.Context){
 
 	db.Instance.Where("portal = ?", "nate").Find(&news)
 
-
-
-
-	//e, _ := json.Marshal(news)
-
-	//c.Header("Content-Type", "application/json")
 	c.HTML(http.StatusOK, "news", news)
 }
+

@@ -1,0 +1,14 @@
+①OSがWindowsである場合は、
+cmdにて、set GOOS=linux　と入力して、ビルド環境をlinuxに変更する(aws lambdaが linuxのコンテナで動くため)
+
+②go build -o Crwaling(HandlerName) main.go(SrcName)　入力し、ファイル生成
+
+③go.exe get -u github.com/aws/aws-lambda-go/cmd/build-lambda-zip　からlambdaビルド用ファイルダウンロード
+
+④C:\Users\SONG\Documents\study\go\bin\build-lambda-zip.exe -output Crawling.zip(ZipName) Crawling(②で生成したファイル)　入力でzip生成
+
+⑤aws lambdaにzip登録
+
+⑥handler名は②で生成したファイル名と同様にしないといけない
+
+https://docs.aws.amazon.com/ko_kr/lambda/latest/dg/golang-package.html
