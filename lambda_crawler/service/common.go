@@ -20,9 +20,24 @@ func SaveNews(news []model.RankingNews){
 		//save news to ranking news
 		db.Instance.Create(&r)
 
-		//To Do save news to news
-		//To Do filtering exist news
-		//save only new news
+
+		//save news record only unique news
+		var news = new(model.News)
+		existFlag :=  db.Instance.Where("url = ?", r.Url).First(news).RecordNotFound()
+		if existFlag == true{
+			news = &model.News{
+				Title: r.Title,
+				Content: r.Content,
+				Press: r.Press,
+				Date: r.Date,
+				Url: r.Url,
+				Portal: r.Portal,
+				CreatedAt: r.CreatedAt,
+				UpdatedAt: r.UpdatedAt,
+			}
+
+			db.Instance.Create(news)
+		}
 	}
 }
 
