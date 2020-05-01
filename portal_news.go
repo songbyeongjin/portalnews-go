@@ -6,19 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"gopkg.in/yaml.v2"
+	"html/template"
 	"io"
 	"io/ioutil"
 	"os"
 	"portal_news/api_handler"
 	"portal_news/db"
-	"portal_news/service"
+	"portal_news/lambda_crawler/service"
 )
 
 func main(){
-
-	service.CrawlNateNews()
-
-
 	// *** Set Db
 
 	setDb()
@@ -81,8 +78,9 @@ func setRouter() *gin.Engine{
 	//temporary path for debug mode
 	router.Static("/assets", `C:\Users\SONG\Documents\study\go\src\portal_news\assets`)
 
+
 	//temporary path for debug mode
-	router.LoadHTMLGlob(`C:\Users\SONG\Documents\study\go\src\portal_news\templates\*`)
+	//router.LoadHTMLGlob(`C:\Users\SONG\Documents\study\go\src\portal_news\templates\*`)
 	router.HTMLRender = createRender()
 
 	//set default router
@@ -97,6 +95,8 @@ func setRouter() *gin.Engine{
 		newsRouter.GET("/daum", api_handler.Daum)
 	}
 
+
+
 	return router
 }
 
@@ -106,8 +106,13 @@ func createRender() multitemplate.Renderer {
 	headerPath := rootPath + `header.tmpl`
 
 	r := multitemplate.NewRenderer()
+	r.AddFromFilesFuncs("news", template.FuncMap{
+		"AddHttpsString": service.AddHttpsString,
+	},rootPath +`news.tmpl`, headerPath)
+
 	r.AddFromFiles("home", rootPath + `home.tmpl`, headerPath)
-	r.AddFromFiles("news", rootPath + `news.tmpl`, headerPath)
+	//r.AddFromFiles("news", rootPath + `news.tmpl`, headerPath)
+
 
 	return r
 }
