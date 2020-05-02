@@ -13,8 +13,19 @@ import (
 	"sync"
 )
 
-func Crawling(ctx context.Context) (string, error) {
+type NewsCrawler interface {
+	CrawlNews() []*model.RankingNews
+}
+
+func main() {
+	lambda.Start(crawling)
+	//crawling(context.Background())
+
+}
+
+func crawling(ctx context.Context) (string, error) {
 	dbConnector := db.Connector{
+
 
 		Dialect: os.Getenv("db_dialect"),
 		Host:  os.Getenv("db_host"),
@@ -23,6 +34,7 @@ func Crawling(ctx context.Context) (string, error) {
 		User:  os.Getenv("db_user"),
 		Password:  os.Getenv("db_password"),
 
+
 		/*
 		Dialect: "",
 		Host:  "",
@@ -30,7 +42,8 @@ func Crawling(ctx context.Context) (string, error) {
 		Dbname:  "",
 		User:  "",
 		Password:  "",
-		*/
+
+		 */
 	}
 
 	dbErr := dbConnector.SetDbInstance()
@@ -47,18 +60,7 @@ func Crawling(ctx context.Context) (string, error) {
 }
 
 
-type NewsCrawler interface {
-	CrawlNews() []model.RankingNews
-	GetNewsUrls(rootUrl string) []string
-	GetNews(newsUrls []string) []model.RankingNews
-}
 
-
-func main() {
-	lambda.Start(Crawling)
-	//Crawling(context.Background())
-
-}
 
 func crawlNews() error {
 	//delete exist record rankin news
@@ -70,6 +72,7 @@ func crawlNews() error {
 	newsCrawlers := []NewsCrawler{
 		service.NateNewsCrawler{},
 		service.NaverNewsCrawler{},
+		service.DaumNewsCrawler{},
 	}
 
 	wg := sync.WaitGroup{}

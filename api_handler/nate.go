@@ -8,7 +8,7 @@ import (
 )
 
 func Nate(c *gin.Context){
-	news := []model.News{}
+	news := []model.RankingNews{}
 
 	db.Instance.Where("portal = ?", "nate").Find(&news)
 

@@ -5,6 +5,7 @@ import "time"
 type RankingNews struct{
 	Id int	`gorm:"column:id;type:bigint;AUTO_INCREMENT;not null;primary_key"`
 	Title string	`gorm:"column:title;type:varchar"`
+	TitleJapanese string	`gorm:"column:title_ja;type:varchar"`
 	Content string	`gorm:"column:content"`
 	Press string	`gorm:"column:press;type:varchar"`
 	Date time.Time	`gorm:"column:date"`

@@ -21,10 +21,10 @@ const (
 type NateNewsCrawler struct {
 }
 
-func (crawler NateNewsCrawler)CrawlNews() []model.RankingNews{
+func (crawler NateNewsCrawler)CrawlNews() []*model.RankingNews{
 	nateNewsUrls := crawler.GetNewsUrls(nateNewsRootUrl)
 	nateNews := crawler.GetNews(nateNewsUrls)
-
+	setJpTitle(nateNews)
 
 	return nateNews
 }
@@ -39,7 +39,6 @@ func (crawler NateNewsCrawler) GetNewsUrls(rootUrl string) []string{
 
 	// Find and visit all links
 	c.OnHTML(nateCssSelectorFirstToFifth+cssSelectorOrCondition+nateCssSelectorSixthTo, func(e *colly.HTMLElement) {
-		//e.Request.Visit(e.Attr("href"))
 		if len(urls) < NewsCount {
 			url := e.Attr("href")[2:]//delete string("//") in title
 			urls = append(urls, url)
@@ -54,8 +53,11 @@ func (crawler NateNewsCrawler) GetNewsUrls(rootUrl string) []string{
 }
 
 //get NateNews Object from nate urls
-func (crawler NateNewsCrawler) GetNews(newsUrls []string) []model.RankingNews {
-	nateNews := make([]model.RankingNews, NewsCount, NewsCount)
+func (crawler NateNewsCrawler) GetNews(newsUrls []string) []*model.RankingNews {
+	nateNews := make([]*model.RankingNews, NewsCount, NewsCount)
+	for i:=0; i<len(nateNews); i++{
+		nateNews[i] = &model.RankingNews{}
+	}
 
 	cSlice := make([]*colly.Collector, NewsCount, NewsCount)
 	var wg sync.WaitGroup
@@ -104,3 +106,4 @@ func (crawler NateNewsCrawler) GetNews(newsUrls []string) []model.RankingNews {
 
 	return nateNews
 }
+

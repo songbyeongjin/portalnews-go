@@ -12,6 +12,7 @@ import (
 const(
 	newsCount = 20
 	HttpsUrl                = `https://`
+	HttpUrl                = `http://`
 	nateNewsRootUrl         = HttpsUrl +`news.nate.com/rank/interest?sc=all&p=day&date=20999999`
 	cssSelectorFirstToFifth = ".mlt01 a"
 	cssSelectorSixthTo      = ".mduSubject a"

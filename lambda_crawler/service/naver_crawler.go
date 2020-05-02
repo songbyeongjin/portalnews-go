@@ -24,14 +24,15 @@ type NaverNewsCrawler struct {
 }
 
 
-func (crawler NaverNewsCrawler)CrawlNews() []model.RankingNews{
+func (crawler NaverNewsCrawler)CrawlNews() []*model.RankingNews{
 	naverNewsUrls := crawler.GetNewsUrls(naverNewsRootUrl)
 	naverNews := crawler.GetNews(naverNewsUrls)
+	setJpTitle(naverNews)
 
 	return naverNews
 }
 
-//get Nate News url From nate root url
+//get Naver News url From nate root url
 func (crawler NaverNewsCrawler) GetNewsUrls(rootUrl string) []string{
 	urls := make([]string,0, NewsCount)
 	c := colly.NewCollector()
@@ -40,7 +41,6 @@ func (crawler NaverNewsCrawler) GetNewsUrls(rootUrl string) []string{
 
 	// Find and visit all links
 	c.OnHTML(naverCssSelectorUrl, func(e *colly.HTMLElement) {
-		//e.Request.Visit(e.Attr("href"))
 		if len(urls) < NewsCount {
 			url := e.Attr("href")
 			urls = append(urls, naverNewsPrefixUrl + url)
@@ -54,9 +54,13 @@ func (crawler NaverNewsCrawler) GetNewsUrls(rootUrl string) []string{
 	return urls
 }
 
-//get NateNews Object from nate urls
-func (crawler NaverNewsCrawler)GetNews(newsUrls []string) []model.RankingNews {
-	naverNews := make([]model.RankingNews, NewsCount, NewsCount)
+//get NaverNews Object from nate urls
+func (crawler NaverNewsCrawler)GetNews(newsUrls []string) []*model.RankingNews {
+	naverNews := make([]*model.RankingNews, NewsCount, NewsCount)
+	for i:=0; i<len(naverNews); i++{
+		naverNews[i] = &model.RankingNews{}
+	}
+
 
 	cSlice := make([]*colly.Collector, NewsCount, NewsCount)
 	dateDuplicateCheck := make([]bool,10)

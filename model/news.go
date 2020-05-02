@@ -5,8 +5,9 @@ import (
 )
 
 type News struct{
-	Id int	`gorm:"type:bigint(20) unsigned auto_increment;not null;primary_key"`
+	Id int	`gorm:"column:id;type:bigint; auto_increment;not null;primary_key"`
 	Title string	`gorm:"column:title"`
+	TitleJapanese string	`gorm:"column:title_ja;type:varchar"`
 	Content string	`gorm:"column:content"`
 	Press string	`gorm:"column:press"`
 	Writer string	`gorm:"column:writer"`
@@ -15,5 +16,4 @@ type News struct{
 	Portal string	`gorm:"column:portal"`
 	CreatedAt time.Time	`gorm:"column:created_at"`
 	UpdatedAt time.Time	`gorm:"column:updated_at"`
-
 }
