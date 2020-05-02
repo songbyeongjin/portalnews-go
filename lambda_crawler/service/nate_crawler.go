@@ -18,18 +18,20 @@ const (
 	nateCssSelectorDate         = ".firstDate em"
 )
 
-func CrawlNateNews() []model.RankingNews{
-	nateNewsUrls := getNateNewsUrls(nateNewsRootUrl)
-	nateNews := getNateNews(nateNewsUrls)
+type NateNewsCrawler struct {
+}
+
+func (crawler NateNewsCrawler)CrawlNews() []model.RankingNews{
+	nateNewsUrls := crawler.GetNewsUrls(nateNewsRootUrl)
+	nateNews := crawler.GetNews(nateNewsUrls)
 
 
 	return nateNews
 }
 
 
-
 //get Nate News url From nate root url
-func getNateNewsUrls(nateRootUrl string) []string{
+func (crawler NateNewsCrawler) GetNewsUrls(rootUrl string) []string{
 	urls := make([]string,0, NewsCount)
 	c := colly.NewCollector()
 	var wg sync.WaitGroup
@@ -45,14 +47,14 @@ func getNateNewsUrls(nateRootUrl string) []string{
 		}
 	})
 
-	c.Visit(nateRootUrl)
+	c.Visit(rootUrl)
 	wg.Wait()
 
 	return urls
 }
 
 //get NateNews Object from nate urls
-func getNateNews(nateNewsUrls []string) []model.RankingNews {
+func (crawler NateNewsCrawler) GetNews(newsUrls []string) []model.RankingNews {
 	nateNews := make([]model.RankingNews, NewsCount, NewsCount)
 
 	cSlice := make([]*colly.Collector, NewsCount, NewsCount)
@@ -87,7 +89,7 @@ func getNateNews(nateNewsUrls []string) []model.RankingNews {
 		})
 	}
 
-	for i, url := range nateNewsUrls {
+	for i, url := range newsUrls {
 		nateNews[i].Url = url
 		nateNews[i].Portal = "nate"
 		inUrl := url

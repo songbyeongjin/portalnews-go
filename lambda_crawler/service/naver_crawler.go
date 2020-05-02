@@ -20,15 +20,19 @@ const (
 	deleteString = "\n\t\n\t\n\n\n\n// flash 오류를 우회하기 위한 함수 추가\nfunction _flash_removeCallback() {}\n\n\t\n\t"
 )
 
-func CrawlNaverNews() []model.RankingNews{
-	naverNewsUrls := getNaverNewsUrls(naverNewsRootUrl)
-	naverNews := getNaverNews(naverNewsUrls)
+type NaverNewsCrawler struct {
+}
+
+
+func (crawler NaverNewsCrawler)CrawlNews() []model.RankingNews{
+	naverNewsUrls := crawler.GetNewsUrls(naverNewsRootUrl)
+	naverNews := crawler.GetNews(naverNewsUrls)
 
 	return naverNews
 }
 
 //get Nate News url From nate root url
-func getNaverNewsUrls(naverRootUrl string) []string{
+func (crawler NaverNewsCrawler) GetNewsUrls(rootUrl string) []string{
 	urls := make([]string,0, NewsCount)
 	c := colly.NewCollector()
 	var wg sync.WaitGroup
@@ -44,14 +48,14 @@ func getNaverNewsUrls(naverRootUrl string) []string{
 		}
 	})
 
-	c.Visit(naverRootUrl)
+	c.Visit(rootUrl)
 	wg.Wait()
 
 	return urls
 }
 
 //get NateNews Object from nate urls
-func getNaverNews(naverNewsUrls []string) []model.RankingNews {
+func (crawler NaverNewsCrawler)GetNews(newsUrls []string) []model.RankingNews {
 	naverNews := make([]model.RankingNews, NewsCount, NewsCount)
 
 	cSlice := make([]*colly.Collector, NewsCount, NewsCount)
@@ -103,7 +107,7 @@ func getNaverNews(naverNewsUrls []string) []model.RankingNews {
 		})
 	}
 
-	for i, url := range naverNewsUrls {
+	for i, url := range newsUrls {
 		naverNews[i].Url = url
 		naverNews[i].Portal = "naver"
 		inUrl := url
