@@ -4,13 +4,27 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"portal_news/const_val"
 	"portal_news/db"
 	"portal_news/model"
 	"portal_news/service"
 )
 
 func Login(c *gin.Context) {
-	c.HTML(http.StatusOK, "login", nil)
+
+	logFlag := service.GetLoginFlag(c)
+
+	//already log user handling
+	if logFlag{
+		c.HTML(http.StatusOK, "home", gin.H{
+			const_val.LoginFlag : service.GetLoginFlag(c),
+		})
+		return
+	}
+
+	c.HTML(http.StatusOK, "login", gin.H{
+		const_val.LoginFlag : service.GetLoginFlag(c),
+	})
 }
 
 func LoginAuth(c *gin.Context) {
@@ -41,12 +55,14 @@ func LoginAuth(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "home", nil)
+	c.HTML(http.StatusOK, "home",gin.H{
+		const_val.LoginFlag : service.GetLoginFlag(c),
+	})
 }
 
 func createSession(c *gin.Context, user *model.User) error{
 	session := sessions.Default(c)
-	session.Set(service.UserKey, user.UserId)
+	session.Set(const_val.UserKey, user.UserId)
 	err := session.Save()
 	return err
 }

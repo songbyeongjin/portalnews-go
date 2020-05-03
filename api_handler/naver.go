@@ -3,8 +3,10 @@ package api_handler
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"portal_news/const_val"
 	"portal_news/db"
 	"portal_news/model"
+	"portal_news/service"
 )
 
 func Naver(c *gin.Context){
@@ -12,8 +14,8 @@ func Naver(c *gin.Context){
 
 	db.Instance.Where("portal = ?", "naver").Find(&rankingNews)
 
-	//e, _ := json.Marshal(news)
-
-	//c.Header("Content-Type", "application/json")
-	c.HTML(http.StatusOK, "news", rankingNews)
+	c.HTML(http.StatusOK, "news",gin.H{
+		const_val.News:       rankingNews,
+		const_val.LoginFlag : service.GetLoginFlag(c),
+	})
 }
