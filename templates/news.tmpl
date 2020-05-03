@@ -22,10 +22,16 @@
       {{range .}}
            <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-2">
              <div class="resume-content">
+             {{ if eq .Portal "naver"}}
                <h5 class="mb-0" onclick="window.open('{{.Url | AddHttpsString}}', '_blank')">{{.Title}}</h5>
                <h5 class="mb-0" onclick="window.open('{{.Url | AddHttpsString}}', '_blank')">{{.TitleJapanese}}</h5>
-               <div class="subheading cor">{{.Press}}</div>
-               <p>{{.Content}}</p>
+               <div class="subheading cor">{{.PressJapanese}}</div>
+               <p>{{.ContentJapanese}}</p>
+             {{ else }}
+                <h5 class="mb-0" onclick="window.open('{{.Url | AddHttpsString}}', '_blank')">{{.Title}}</h5>
+                <div class="subheading cor">{{.Press}}</div>
+                <p>{{.Content}}</p>
+             {{ end }}
              </div>
              <div class="resume-date text-md-right">
                <span class="text-primary">{{.Date.Format "2006-01-02"}}</span>

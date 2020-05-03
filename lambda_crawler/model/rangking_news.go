@@ -7,7 +7,9 @@ type RankingNews struct{
 	Title string	`gorm:"column:title;type:varchar"`
 	TitleJapanese string	`gorm:"column:title_ja;type:varchar"`
 	Content string	`gorm:"column:content"`
+	ContentJapanese string	`gorm:"column:content_ja"`
 	Press string	`gorm:"column:press;type:varchar"`
+	PressJapanese string	`gorm:"column:press_ja"`
 	Date time.Time	`gorm:"column:date"`
 	Url string	`gorm:"column:url"`
 	Portal string	`gorm:"column:portal;type:varchar"`

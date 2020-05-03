@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"gopkg.in/yaml.v2"
@@ -12,7 +14,7 @@ import (
 	"os"
 	"portal_news/api_handler"
 	"portal_news/db"
-	"portal_news/lambda_crawler/service"
+	"portal_news/service"
 )
 
 func main(){
@@ -75,6 +77,9 @@ func getDbConnector() (*db.Connector, error){
 func setRouter() *gin.Engine{
 	router := gin.Default()
 
+	store := cookie.NewStore([]byte("secret"))
+	router.Use(sessions.Sessions("mysession", store))
+
 	//temporary path for debug mode
 	router.Static("/assets", `C:\Users\SONG\Documents\study\go\src\portal_news\assets`)
 
@@ -85,6 +90,8 @@ func setRouter() *gin.Engine{
 
 	//set default router
 	router.GET("/", api_handler.Home)
+	router.GET("/login", api_handler.Login)
+	router.POST("/login-auth", api_handler.LoginAuth)
 
 	//set news group router
 	newsRouter := router.Group("/news")
@@ -93,6 +100,12 @@ func setRouter() *gin.Engine{
 		newsRouter.GET("/naver", api_handler.Naver)
 		newsRouter.GET("/nate", api_handler.Nate)
 		newsRouter.GET("/daum", api_handler.Daum)
+	}
+
+
+	myPageRouter := router.Group("/mypage").Use(service.SessionCheck())
+	{
+		myPageRouter.GET("/", api_handler.MyPage)
 	}
 
 
@@ -111,6 +124,7 @@ func createRender() multitemplate.Renderer {
 	},rootPath +`news.tmpl`, headerPath)
 
 	r.AddFromFiles("home", rootPath + `home.tmpl`, headerPath)
+	r.AddFromFiles("login", rootPath + `login.tmpl`, headerPath)
 	//r.AddFromFiles("news", rootPath + `news.tmpl`, headerPath)
 
 
