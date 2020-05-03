@@ -9,17 +9,17 @@
   {{template "navigation" .}}
   <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="nate">
     <div class="w-100">
-      <h2 class="mb-2">{{(index . 0).Portal}}</h2>
+      <h2 class="mb-2">{{(index .news 0).Portal}}</h2>
 
-      {{ if eq (index . 0).Portal "nate"}}
+      {{ if eq (index .news 0).Portal "nate"}}
         <button type="button" id="nate_refresh" class="btn btn-danger mb-2" onclick="window.location.href='/second/index#nate'">News Refresh</button>
-      {{ else if eq (index . 0).Portal "naver"}}
+      {{ else if eq (index .news 0).Portal "naver"}}
         <button type="button" id="nate_refresh" class="btn btn-success mb-2" onclick="window.location.href='/second/index#nate'">News Refresh</button>
       {{ else }}
         <button type="button" id="nate_refresh" class="btn btn-primary mb-2" onclick="window.location.href='/second/index#nate'">News Refresh</button>
       {{ end }}
 
-      {{range .}}
+      {{range .news}}
            <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-2">
              <div class="resume-content">
              {{ if eq .Portal "naver"}}

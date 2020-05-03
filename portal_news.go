@@ -83,15 +83,15 @@ func setRouter() *gin.Engine{
 	//temporary path for debug mode
 	router.Static("/assets", `C:\Users\SONG\Documents\study\go\src\portal_news\assets`)
 
-
-	//temporary path for debug mode
-	//router.LoadHTMLGlob(`C:\Users\SONG\Documents\study\go\src\portal_news\templates\*`)
+	//set render
 	router.HTMLRender = createRender()
 
-	//set default router
+	//set auth router
 	router.GET("/", api_handler.Home)
 	router.GET("/login", api_handler.Login)
 	router.POST("/login-auth", api_handler.LoginAuth)
+	router.GET("/logout", api_handler.Logout)
+	router.POST("/signup", api_handler.SignUp)
 
 	//set news group router
 	newsRouter := router.Group("/news")
@@ -102,8 +102,8 @@ func setRouter() *gin.Engine{
 		newsRouter.GET("/daum", api_handler.Daum)
 	}
 
-
-	myPageRouter := router.Group("/mypage").Use(service.SessionCheck())
+	//set only mypage group router
+	myPageRouter := router.Group("/mypage").Use(service.LoginCheck())
 	{
 		myPageRouter.GET("/", api_handler.MyPage)
 	}
@@ -116,17 +116,27 @@ func setRouter() *gin.Engine{
 //Create render for using template block
 func createRender() multitemplate.Renderer {
 	rootPath := `C:\Users\SONG\Documents\study\go\src\portal_news\templates\`
-	headerPath := rootPath + `header.tmpl`
+	homePath := rootPath + `home.tmpl`
+	newsPath := rootPath + `news.tmpl`
+	loginPath := rootPath + `login.tmpl`
+	notLoginPath := rootPath + `not_login.tmpl`
+
+
+	defineRootPath := `C:\Users\SONG\Documents\study\go\src\portal_news\templates\define\`
+	defineHeaderPath := defineRootPath + `define_header.tmpl`
+	defineNavigationPath := defineRootPath + `define_navigation.tmpl`
+	defineLoginPath := defineRootPath + `define_login.tmpl`
+
 
 	r := multitemplate.NewRenderer()
 	r.AddFromFilesFuncs("news", template.FuncMap{
 		"AddHttpsString": service.AddHttpsString,
-	},rootPath +`news.tmpl`, headerPath)
+	},newsPath, defineHeaderPath, defineNavigationPath)
 
-	r.AddFromFiles("home", rootPath + `home.tmpl`, headerPath)
-	r.AddFromFiles("login", rootPath + `login.tmpl`, headerPath)
+	r.AddFromFiles("home", homePath, defineHeaderPath, defineNavigationPath)
+	r.AddFromFiles("login", loginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
+	r.AddFromFiles("notLogin", notLoginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
 	//r.AddFromFiles("news", rootPath + `news.tmpl`, headerPath)
-
 
 	return r
 }
