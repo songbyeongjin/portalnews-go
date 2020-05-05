@@ -6,6 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"portal_news/const_val"
+	"portal_news/db"
+	"portal_news/model"
+	"portal_news/service"
 )
 
 func MyPageGet(c *gin.Context) {
@@ -13,5 +16,12 @@ func MyPageGet(c *gin.Context) {
 
 	userId := fmt.Sprintf("%v", session.Get(const_val.UserKey))
 
-	c.JSON(http.StatusOK, gin.H{"state": "welcome " + userId})
+	reviews := &[]model.Review{}
+	db.Instance.Find(reviews,"user_id=?", userId)
+
+	c.HTML(http.StatusOK, "myPage",gin.H{
+		"userId":       userId,
+		"reviews":reviews,
+		const_val.LoginFlag : service.GetLoginFlag(c),
+	})
 }

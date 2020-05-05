@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+{{template "header" .}}
+</head>
+
+<body id="page-top">
+    {{template "navigation" .}}
+    <div id="loginbox" style="margin-top: 50px;" class="mainbox col-lg-6 offset-md-3 col-md-8 offset-sm-2">
+        <div class="card card-inverse card-info">
+            <div class="card-header">
+                <div class="card-title">Selected News</div>
+            </div>
+            <div style="padding-top: 5px;" class="card-block">
+                <div style="display: none;" id="login-alert" class="alert alert-danger col-md-12"></div>
+                <form id=""  role="form">
+                    </i><label class="col-lg-3 form-control-label">News Title</label>
+                    <div style="margin-bottom: 5px;" class="input-group"z> <span class="input-group-addon"></span>
+                        <input id="login-username" type="text" class="form-control" readonly="readonly" value="{{ .newsTitle }}" />
+                    </div>
+                    <label class="col-lg-3 form-control-label">News Portal / Press</label>
+                    <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="login-password" type="text" class="form-control" readonly="readonly" value="{{ .newsPortal }} / {{ .newsPress }}" />
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div class="card-header">
+                <div class="card-title">Review</div>
+            </div>
+            <div style="padding-top: 5px;" class="card-block">
+                <div style="display: none;" id="login-alert" class="alert alert-danger col-md-12"></div>
+                <form id="loginform2" class="" role="form" method="post" action="/review/{{ .newsUrl }}">
+                    <label for="email" class="col-lg-3 form-control-label">Review Title</label>
+                    <div style="margin-bottom: 5px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="login-username" type="text" class="form-control" name="title" />
+                    </div>
+                    <label for="email" class="col-lg-3 form-control-label">Review Content</label>
+                    <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <textarea class="form-control" rows="4" cols="50" name="content" form="loginform2"></textarea>
+                    </div>
+                    <input type="hidden" name="url" value="{{ .newsUrl}}" />
+                    <div style="margin-top: 10px;" class="form-group">
+                        <!-- Button -->
+                        <div class="col-md-12 controls">
+                            <input type="submit" id="btn-login" class="btn btn-success" value ="Post Review">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

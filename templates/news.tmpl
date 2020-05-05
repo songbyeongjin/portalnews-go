@@ -11,13 +11,16 @@
     <div class="w-100">
       <h2 class="mb-2">{{(index .news 0).Portal}}</h2>
 
+      {{ $newsColor := "" }}
       {{ if eq (index .news 0).Portal "nate"}}
-        <button type="button" id="nate_refresh" class="btn btn-danger mb-2" onclick="window.location.href='/second/index#nate'">News Refresh</button>
+        {{ $newsColor = "danger" }}
       {{ else if eq (index .news 0).Portal "naver"}}
-        <button type="button" id="nate_refresh" class="btn btn-success mb-2" onclick="window.location.href='/second/index#nate'">News Refresh</button>
+        {{ $newsColor = "success" }}
       {{ else }}
-        <button type="button" id="nate_refresh" class="btn btn-primary mb-2" onclick="window.location.href='/second/index#nate'">News Refresh</button>
+        {{ $newsColor = "primary" }}
       {{ end }}
+
+      {{ $tempLoginFlag := .loginFlag }}
 
       {{range .news}}
            <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-2">
@@ -26,12 +29,20 @@
                <h5 class="mb-0" onclick="window.open('{{.Url | AddHttpsString}}', '_blank')">{{.Title}}</h5>
                <h5 class="mb-0" onclick="window.open('{{.Url | AddHttpsString}}', '_blank')">{{.TitleJapanese}}</h5>
                <div class="subheading cor">{{.PressJapanese}}</div>
-               <p>{{.ContentJapanese}}</p>
+               <p>
+                 {{.ContentJapanese}}<br>
+               </p>
              {{ else }}
                 <h5 class="mb-0" onclick="window.open('{{.Url | AddHttpsString}}', '_blank')">{{.Title}}</h5>
                 <div class="subheading cor">{{.Press}}</div>
-                <p>{{.Content}}</p>
+                <p>
+                  {{.Content}}
+                </p>
              {{ end }}
+             {{ if eq $tempLoginFlag true }}
+               <button onclick="location.href='/review/{{.Url}}'" id="review-btn" class="btn btn-{{ $newsColor }}">Review <i class="fas fa-pencil-alt"></i></button>
+             {{ end }}
+             <hr>
              </div>
              <div class="resume-date text-md-right">
                <span class="text-primary">{{.Date.Format "2006-01-02"}}</span>

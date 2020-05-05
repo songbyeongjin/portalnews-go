@@ -83,7 +83,7 @@ func getDbConnector() (*db.Connector, error){
 func setRouter() *gin.Engine{
 	router := gin.Default()
 
-	store := cookie.NewStore([]byte("secret"))
+	store := cookie.NewStore([]byte("secret"))//ToDo encryption
 	router.Use(sessions.Sessions("mysession", store))
 
 	//temporary path for debug mode
@@ -110,10 +110,18 @@ func setRouter() *gin.Engine{
 		newsRouter.GET("/daum", api_handler.Daumget)
 	}
 
-	//set only mypage group router
+
+	//set  mypage group router
 	myPageRouter := router.Group("/mypage").Use(service.LoginCheck())
 	{
 		myPageRouter.GET("/", api_handler.MyPageGet)
+	}
+
+	//set review group router
+	reviewRouter := router.Group("/review").Use(service.LoginCheck())
+	{
+		reviewRouter.GET("/*queryUrl", api_handler.WriteReviewGET)
+		reviewRouter.POST("/*queryUrl", api_handler.WriteReviewPOST)
 	}
 
 	return router
@@ -126,6 +134,8 @@ func createRender() multitemplate.Renderer {
 	newsPath := rootPath + `news.tmpl`
 	loginPath := rootPath + `login.tmpl`
 	notLoginPath := rootPath + `not_login.tmpl`
+	writeReviewPath := rootPath + `write_review.tmpl`
+	myPageath := rootPath + `mypage.tmpl`
 
 
 	defineRootPath := `C:\Users\SONG\Documents\study\go\src\portal_news\templates\define\`
@@ -142,6 +152,8 @@ func createRender() multitemplate.Renderer {
 	r.AddFromFiles("home", homePath, defineHeaderPath, defineNavigationPath)
 	r.AddFromFiles("login", loginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
 	r.AddFromFiles("notLogin", notLoginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
+	r.AddFromFiles("writeReview", writeReviewPath, defineHeaderPath,defineNavigationPath)
+	r.AddFromFiles("myPage", myPageath, defineHeaderPath,defineNavigationPath)
 	//r.AddFromFiles("news", rootPath + `news.tmpl`, headerPath)
 
 	return r
