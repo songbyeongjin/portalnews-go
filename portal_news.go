@@ -25,6 +25,12 @@ func main(){
 
 	// Set Db ***
 
+	// *** Set Oauth
+
+	service.SetOauthGoogleConfig()
+
+	// Set Oauth ***
+
 	// *** Set Router
 
 	f, _ := os.Create("./server.log")
@@ -87,28 +93,28 @@ func setRouter() *gin.Engine{
 	router.HTMLRender = createRender()
 
 	//set auth router
-	router.GET("/", api_handler.Home)
-	router.GET("/login", api_handler.Login)
-	router.POST("/login-auth", api_handler.LoginAuth)
-	router.GET("/logout", api_handler.Logout)
-	router.POST("/signup", api_handler.SignUp)
+	router.GET("/", api_handler.HomeGet)
+	router.GET("/login", api_handler.LoginGet)
+	router.POST("/login-auth", api_handler.LoginAuthPost)
+	router.GET("/google-oauth", api_handler.GoogleOauthGet)
+	router.GET("/google-oauth/callback", api_handler.GoogleOauthCallbackGet)
+	router.GET("/logout", api_handler.LogoutGet)
+	router.POST("/signup", api_handler.SignUpPost)
 
 	//set news group router
 	newsRouter := router.Group("/news")
 	{
-		newsRouter.GET("/", api_handler.Portal)
-		newsRouter.GET("/naver", api_handler.Naver)
-		newsRouter.GET("/nate", api_handler.Nate)
-		newsRouter.GET("/daum", api_handler.Daum)
+		newsRouter.GET("/", api_handler.PortalGet)
+		newsRouter.GET("/naver", api_handler.Naverget)
+		newsRouter.GET("/nate", api_handler.NateGet)
+		newsRouter.GET("/daum", api_handler.Daumget)
 	}
 
 	//set only mypage group router
 	myPageRouter := router.Group("/mypage").Use(service.LoginCheck())
 	{
-		myPageRouter.GET("/", api_handler.MyPage)
+		myPageRouter.GET("/", api_handler.MyPageGet)
 	}
-
-
 
 	return router
 }
