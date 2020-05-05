@@ -1,1 +1,5 @@
-db_info.yaml
+blueprint/
+*.exe
+*.zip
+*.txt
+*.yaml
