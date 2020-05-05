@@ -9,7 +9,7 @@ import (
 	"portal_news/service"
 )
 
-func Naver(c *gin.Context){
+func Naverget(c *gin.Context){
 	rankingNews := []model.RankingNews{}
 
 	db.Instance.Where("portal = ?", "naver").Find(&rankingNews)

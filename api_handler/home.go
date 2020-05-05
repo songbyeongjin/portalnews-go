@@ -7,7 +7,7 @@ import (
 	"portal_news/service"
 )
 
-func Home(c *gin.Context){
+func HomeGet(c *gin.Context){
 	c.HTML(http.StatusOK, "home",gin.H{
 		const_val.LoginFlag : service.GetLoginFlag(c),
 	})

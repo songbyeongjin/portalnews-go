@@ -9,7 +9,7 @@ import (
 	"portal_news/service"
 )
 
-func Nate(c *gin.Context){
+func NateGet(c *gin.Context){
 	rankingNews := []model.RankingNews{}
 
 	db.Instance.Where("portal = ?", "nate").Find(&rankingNews)

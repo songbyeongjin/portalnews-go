@@ -1,16 +1,15 @@
 package api_handler
 
 import (
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"portal_news/const_val"
-	"portal_news/db"
 	"portal_news/model"
 	"portal_news/service"
 )
 
-func Login(c *gin.Context) {
+func LoginGet(c *gin.Context) {
 
 	logFlag := service.GetLoginFlag(c)
 
@@ -24,10 +23,11 @@ func Login(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "login", gin.H{
 		const_val.LoginFlag : service.GetLoginFlag(c),
+		"signUpId" : nil,
 	})
 }
 
-func LoginAuth(c *gin.Context) {
+func LoginAuthPost(c *gin.Context) {
 	userId := c.PostForm("userId")
 	userPass := c.PostForm("userPass")
 
@@ -36,13 +36,17 @@ func LoginAuth(c *gin.Context) {
 		UserPass: userPass,
 	}
 
-	var userObj = new(model.User)
+	//validation check
+	if !service.UserValidation(user){
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "parameter error"})
+		return
+	}
 
-	idNotExist := db.Instance.Where("user_id = ?", user.UserId).First(userObj).RecordNotFound()
+
+	idNotExist, userObj := service.UserExistCheck(user)
 	if idNotExist {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized id not exist"})
 		return
-
 	}else{
 		if userObj.UserPass != user.UserPass{
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized password err"})
@@ -50,7 +54,7 @@ func LoginAuth(c *gin.Context) {
 		}
 	}
 
-	if createSession(c, user) != nil{
+	if service.CreateSession(c, user) != nil{
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
 	}
@@ -60,9 +64,44 @@ func LoginAuth(c *gin.Context) {
 	})
 }
 
-func createSession(c *gin.Context, user *model.User) error{
-	session := sessions.Default(c)
-	session.Set(const_val.UserKey, user.UserId)
-	err := session.Save()
-	return err
+
+
+func GoogleOauthGet(c *gin.Context) {
+	state := service.OauthSetCookie(c)
+	url := service.OauthGoogleConfig.AuthCodeURL(state)
+
+	c.Redirect(http.StatusTemporaryRedirect, url)
+}
+
+func GoogleOauthCallbackGet(c *gin.Context){
+	cookieState, _ := c.Cookie(const_val.OauthGoogleCookieName)
+	googleState := c.Request.URL.Query().Get("state")
+
+	if cookieState != googleState{
+		log.Printf("invalid google oauth state")
+		c.HTML(http.StatusOK, "home",gin.H{
+			const_val.LoginFlag : service.GetLoginFlag(c),
+		})
+	}
+
+	googleCode := c.Request.URL.Query().Get("code")
+	googleUser, err := service.GetGoogleUserInfo(c, googleCode)
+
+	if err != nil{
+		log.Println(err)
+		c.HTML(http.StatusOK, "home",gin.H{
+			const_val.LoginFlag : service.GetLoginFlag(c),
+		})
+	}
+
+	user := service.GoogleUserDbInsert(googleUser)
+
+	if service.CreateSession(c, user) != nil{
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+		return
+	}
+
+	c.HTML(http.StatusOK, "home",gin.H{
+		const_val.LoginFlag : service.GetLoginFlag(c),
+	})
 }

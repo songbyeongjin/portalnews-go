@@ -9,7 +9,7 @@ import (
 	"portal_news/service"
 )
 
-func Daum(c *gin.Context){
+func Daumget(c *gin.Context){
 	rankingNews := []model.RankingNews{}
 
 	db.Instance.Where("portal = ?", "daum").Find(&rankingNews)

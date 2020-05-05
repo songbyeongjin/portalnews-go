@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"portal_news/const_val"
+	"portal_news/model"
 )
 
 func LoginCheck() gin.HandlerFunc {
@@ -20,8 +21,22 @@ func LoginCheck() gin.HandlerFunc {
 			c.Abort()
 			return
 		}else{
-			c.Set(const_val.UserKey, user) // ユーザidをセット
+			c.Set(const_val.UserKey, user)
 			c.Next()
 		}
 	}
+}
+
+func CreateSession(c *gin.Context, user *model.User) error{
+	session := sessions.Default(c)
+	session.Set(const_val.UserKey, user.UserId)
+	err := session.Save()
+	return err
+}
+
+func DeleteSession(c *gin.Context) error{
+	session := sessions.Default(c)
+	session.Clear()
+	err := session.Save()
+	return err
 }
