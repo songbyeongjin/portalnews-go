@@ -1,12 +1,42 @@
-{{.userId}}<br>
+<!DOCTYPE html>
+<html lang="en">
 
-{{range .reviews}}
-    {{ .NewsUrl}}
-    <br>
-    {{ .Title}}
-    <br>
-    {{ .Content}}
-    <br>
-    <br>
-    <br>
-{{end}}
+<head>
+{{template "header" .}}
+</head>
+
+<body id="page-top">
+  {{template "navigation" .}}
+  <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="nate">
+    <div class="w-100">
+      <h2 class="mb-2">MY REVIEW</h2>
+      <h4 class="mb-2">{{ .userId }}</h2>
+      <hr>
+
+      {{range $i, $v := .reviews}}
+           <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-2">
+             <div class="resume-content">
+                <div class="subheading cor" onclick="window.open('{{$v.NewsUrl | AddHttpsString}}', '_blank')">{{$v.NewsTitle}}</div>
+                <div class="subheading cor">{{$v.Portal}}</div>
+
+                <h5 class="mb-0" >{{$v.Title}}</h5>
+                <p>
+                  {{$v.Content}}
+                </p>
+                <div style="margin-top: 10px;" class="form-group">
+                  <form id="delete-form{{$i}}" class="" role="form" method="delete" action="/review/{{ $v.NewsUrl }}"></form>
+                  <a href="/review/{{$v.NewsUrl}}" class="btn btn-sm btn-info"> <i class="fas fa-edit"></i> MODIFY</a>
+                  <button id="delete-btn" class="btn btn-sm btn-danger" onclick="reviewDelete({{$i}});"><i class="far fa-trash-alt"></i> DELETE</a></button>
+                </div>
+             <hr>
+             </div>
+             <div class="resume-date text-md-right">
+               <span class="text-primary">{{$v.Date.Format "2006-01-02 15:04:05"}}</span>
+             </div>
+           </div>
+      {{end}}
+    </div>
+  </section>
+</body>
+
+</html>

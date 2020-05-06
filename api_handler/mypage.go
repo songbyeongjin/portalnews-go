@@ -6,22 +6,23 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"portal_news/const_val"
-	"portal_news/db"
-	"portal_news/model"
 	"portal_news/service"
 )
+
+
+
 
 func MyPageGet(c *gin.Context) {
 	session := sessions.Default(c)
 
 	userId := fmt.Sprintf("%v", session.Get(const_val.UserKey))
 
-	reviews := &[]model.Review{}
-	db.Instance.Find(reviews,"user_id=?", userId)
+	reviewTemplates := service.GetReviewTemplates(userId)
+
 
 	c.HTML(http.StatusOK, "myPage",gin.H{
-		"userId":       userId,
-		"reviews":reviews,
+		"userId"  : userId,
+		"reviews" : reviewTemplates,
 		const_val.LoginFlag : service.GetLoginFlag(c),
 	})
 }

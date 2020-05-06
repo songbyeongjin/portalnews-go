@@ -14,16 +14,16 @@
             </div>
             <div style="padding-top: 5px;" class="card-block">
                 <div style="display: none;" id="login-alert" class="alert alert-danger col-md-12"></div>
-                <form id=""  role="form">
+                <div>
                     </i><label class="col-lg-3 form-control-label">News Title</label>
                     <div style="margin-bottom: 5px;" class="input-group"z> <span class="input-group-addon"></span>
-                        <input id="login-username" type="text" class="form-control" readonly="readonly" value="{{ .newsTitle }}" />
+                        <input id="login-username" type="text" class="form-control" readonly="readonly" value="{{ .review.NewsTitle }}" />
                     </div>
                     <label class="col-lg-3 form-control-label">News Portal / Press</label>
                     <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input id="login-password" type="text" class="form-control" readonly="readonly" value="{{ .newsPortal }} / {{ .newsPress }}" />
+                        <input id="login-password" type="text" class="form-control" readonly="readonly" value="{{ .review.Portal }} / {{ .review.Press }}" />
                     </div>
-                </form>
+                </div>
             </div>
             <hr>
             <div class="card-header">
@@ -31,23 +31,31 @@
             </div>
             <div style="padding-top: 5px;" class="card-block">
                 <div style="display: none;" id="login-alert" class="alert alert-danger col-md-12"></div>
-                <form id="loginform2" class="" role="form" method="post" action="/review/{{ .newsUrl }}">
-                    <label for="email" class="col-lg-3 form-control-label">Review Title</label>
+                <div id="loginform2">
+                    <div class="col-lg-3 form-control-label">Review Title</div>
                     <div style="margin-bottom: 5px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="login-username" type="text" class="form-control" name="title" />
+                        <input id="review-title" type="text" class="form-control" name="title" value="{{.review.ReviewTitle}}"/>
                     </div>
-                    <label for="email" class="col-lg-3 form-control-label">Review Content</label>
+                    <div class="col-lg-3 form-control-label">Review Content</div>
                     <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <textarea class="form-control" rows="4" cols="50" name="content" form="loginform2"></textarea>
+                        <textarea id="review-content" class="form-control" rows="4" cols="50" name="content"  form="loginform2">{{.review.ReviewContent}}</textarea>
                     </div>
-                    <input type="hidden" name="url" value="{{ .newsUrl}}" />
+                    <input type="hidden" id="news-url" name="url" value="{{ .review.NewsUrl }}" />
                     <div style="margin-top: 10px;" class="form-group">
                         <!-- Button -->
-                        <div class="col-md-12 controls">
-                            <input type="submit" id="btn-login" class="btn btn-success" value ="Post Review">
-                        </div>
+                        {{ if eq .modifyFlag true }}
+                          <div class="col-md-12 controls">
+                              <form id="modify-form" class="" role="form" method="put" action="/review/{{  .review.NewsUrl }}"></form>
+                              <button id="modify-btn" class="btn btn-sm btn-info" onclick="reviewModify();"><i class="far fa-edit-alt"></i> MODIFY REVIEW</button>
+                          </div>
+                        {{ else }}
+                          <div class="col-md-12 controls">
+                              <form id="post-form" class="" role="form" method="post" action="/review/{{  .review.NewsUrl }}"></form>
+                              <button id="post-btn" class="btn btn-sm btn-info" onclick="reviewPost();"><i class="far fa-edit-alt"></i> POST REVIEW</button>
+                          </div>
+                        {{end}}
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

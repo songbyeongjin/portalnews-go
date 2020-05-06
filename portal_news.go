@@ -122,6 +122,8 @@ func setRouter() *gin.Engine{
 	{
 		reviewRouter.GET("/*queryUrl", api_handler.WriteReviewGET)
 		reviewRouter.POST("/*queryUrl", api_handler.WriteReviewPOST)
+		reviewRouter.PUT("/*queryUrl", api_handler.WriteReviewPUT)
+		reviewRouter.DELETE("/*queryUrl", api_handler.WriteReviewDELETE)
 	}
 
 	return router
@@ -145,15 +147,20 @@ func createRender() multitemplate.Renderer {
 
 
 	r := multitemplate.NewRenderer()
+
 	r.AddFromFilesFuncs("news", template.FuncMap{
 		"AddHttpsString": service.AddHttpsString,
 	},newsPath, defineHeaderPath, defineNavigationPath)
+
+	r.AddFromFilesFuncs("myPage", template.FuncMap{
+		"AddHttpsString": service.AddHttpsString,
+	},myPageath, defineHeaderPath,defineNavigationPath)
 
 	r.AddFromFiles("home", homePath, defineHeaderPath, defineNavigationPath)
 	r.AddFromFiles("login", loginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
 	r.AddFromFiles("notLogin", notLoginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
 	r.AddFromFiles("writeReview", writeReviewPath, defineHeaderPath,defineNavigationPath)
-	r.AddFromFiles("myPage", myPageath, defineHeaderPath,defineNavigationPath)
+	//r.AddFromFiles("myPage", myPageath, defineHeaderPath,defineNavigationPath)
 	//r.AddFromFiles("news", rootPath + `news.tmpl`, headerPath)
 
 	return r

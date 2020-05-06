@@ -40,7 +40,7 @@
                 </p>
              {{ end }}
              {{ if eq $tempLoginFlag true }}
-               <button onclick="location.href='/review/{{.Url}}'" id="review-btn" class="btn btn-{{ $newsColor }}">Review <i class="fas fa-pencil-alt"></i></button>
+               <button onclick="location.href='/review/{{.Url}}'" id="review-btn" class="btn btn-{{ $newsColor }} btn-sm"><i class="fas fa-pencil-alt"></i> REVIEW</button>
              {{ end }}
              <hr>
              </div>

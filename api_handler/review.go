@@ -1,9 +1,11 @@
 package api_handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"net/http"
 	"portal_news/const_val"
 	"portal_news/db"
@@ -12,6 +14,12 @@ import (
 	"strings"
 	"time"
 )
+
+type Jsonody struct{
+	ReviewTitle string `json:"reviewTitle"`
+	ReviewContent string `json:"reviewContent"`
+	NewsUrl string `json:"newsUrl"`
+}
 
 func WriteReviewGET(c *gin.Context) {
 	session := sessions.Default(c)
@@ -22,42 +30,119 @@ func WriteReviewGET(c *gin.Context) {
 	targetIndex := strings.Index(queryUrl, targetStr)
 	newsUrl := queryUrl[targetIndex+ len(targetStr):]
 
-	var news = &model.News{}
-	notExist :=  db.Instance.Where("url = ?", newsUrl).First(news).RecordNotFound()
 
-	if notExist {
+	review, modifyFlag := service.GetCreateReviewTemplate(userId, newsUrl)
+
+	if review == nil {
 		c.HTML(http.StatusOK, "home",gin.H{
 			const_val.LoginFlag : service.GetLoginFlag(c),
 		})
 		return
 	}
 
+
 	c.HTML(http.StatusOK, "writeReview",gin.H{
 		"userId": userId,
-		"newsPortal": news.Portal,
-		"newsPress": news.Press,
-		"newsTitle": news.Title,
+		"review" : review,
+		"modifyFlag" : modifyFlag,
 		const_val.LoginFlag : service.GetLoginFlag(c),
-		"newsUrl":news.Url,
 	})
 }
 
 func WriteReviewPOST(c *gin.Context) {
+	fmt.Println("post in")
 	session := sessions.Default(c)
 
 	userId := fmt.Sprintf("%v", session.Get(const_val.UserKey))
-	title := c.PostForm("title")
-	content := c.PostForm("content")
-	url := c.PostForm("url")
+	bodyJson := &Jsonody{}
 
-	review := &model.Review{
-		UserId : userId,
-		NewsUrl: url,
-		Title:   title,
-		Content: content,
-		Date:    time.Now(),
+	body, _ := ioutil.ReadAll(c.Request.Body)
+	fmt.Println(string(body))
+	err := json.Unmarshal(body, bodyJson)
+
+	if err != nil{
+		c.HTML(http.StatusOK, "home",gin.H{
+			const_val.LoginFlag : service.GetLoginFlag(c),
+		})
+		return
+	}
+	
+	review := &model.Review{}
+	notExist := db.Instance.Where("news_url = ? AND user_id = ?", bodyJson.NewsUrl, userId).First(review).RecordNotFound()
+	if !notExist {
+		db.Instance.Model(review).Updates(map[string]interface{}{"title":bodyJson.ReviewTitle, "content":bodyJson.ReviewContent})
+	}else{
+		createReview := &model.Review{
+			UserId : userId,
+			NewsUrl: bodyJson.NewsUrl,
+			Title:   bodyJson.ReviewTitle,
+			Content: bodyJson.ReviewContent,
+			Date:    time.Now(),
+		}
+		db.Instance.Create(createReview)
 	}
 
-	db.Instance.Create(review)
-	c.Redirect(http.StatusMovedPermanently, "/mypage")
+	c.JSON(http.StatusOK, "/mypage")
+}
+
+
+
+func WriteReviewPUT(c *gin.Context) {
+	session := sessions.Default(c)
+
+	bodyJson := &Jsonody{}
+	body, _ := ioutil.ReadAll(c.Request.Body)
+	fmt.Println(string(body))
+	err := json.Unmarshal(body, bodyJson)
+
+	if err != nil{
+		c.HTML(http.StatusOK, "home",gin.H{
+			const_val.LoginFlag : service.GetLoginFlag(c),
+		})
+		return
+	}
+
+	userId := fmt.Sprintf("%v", session.Get(const_val.UserKey))
+	queryUrl := c.Request.URL.String()
+	targetStr := const_val.ReviewDeleteTargetStr
+	targetIndex := strings.Index(queryUrl, targetStr)
+	newsUrl := queryUrl[targetIndex+ len(targetStr):]
+
+	var review = &model.Review{}
+	notExist :=  db.Instance.Where("news_url = ? AND user_id = ?", newsUrl, userId).First(review).RecordNotFound()
+
+	if notExist {
+		c.HTML(http.StatusOK, "home",gin.H{
+			const_val.LoginFlag : service.GetLoginFlag(c),
+		})
+		return
+	}else{
+		db.Instance.Model(review).Updates(map[string]interface{}{"title":bodyJson.ReviewTitle, "content":bodyJson.ReviewContent})
+	}
+
+	c.JSON(http.StatusOK, "/mypage")
+}
+
+func WriteReviewDELETE(c *gin.Context) {
+	session := sessions.Default(c)
+
+	userId := fmt.Sprintf("%v", session.Get(const_val.UserKey))
+	queryUrl := c.Request.URL.String()
+	targetStr := const_val.ReviewDeleteTargetStr
+	targetIndex := strings.Index(queryUrl, targetStr)
+	newsUrl := queryUrl[targetIndex+ len(targetStr):]
+
+	var review = &model.Review{}
+	notExist :=  db.Instance.Where("news_url = ? AND user_id = ?", newsUrl, userId).First(review).RecordNotFound()
+
+	if notExist {
+		c.HTML(http.StatusOK, "home",gin.H{
+			const_val.LoginFlag : service.GetLoginFlag(c),
+		})
+		return
+	}else{
+		db.Instance.Delete(review)
+	}
+
+	c.JSON(http.StatusOK, "/mypage")
 }

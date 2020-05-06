@@ -27,33 +27,53 @@
 
 })(jQuery); // End of use strict
 
-/*
-$(function () {
-  $('#nate_refresh').click(function () {
-      $.ajax({
-          type: 'GET',
-          url: '/second/index/naterefresh',
-          data: {
-          },
-          dataType: 'json',
-          success: function(content){
-            console.log(content);
-            var target = document.getElementById("nate_refresh");
-            //target.innerHTML = "button was clicked"
-            console.log(target.innerHTML);
-            if(target.innerHTML === "button was clicked")
-            {
-              target.innerHTML = "nate_refresh";
-            }
-            else
-            {
-              target.innerHTML = "button was clicked";
-            }
-        },
-        error: function(xhr, status, error) {
-            alert(error);
-        }
-        })
-  });
-});
-*/
+
+
+function reviewPost(index) {
+    var reviewUrl = $("#news-url").val();
+    var url = "/review/" +reviewUrl;
+    var request_method = "POST";
+    var reviewTitle = $("#review-title").val();
+    var reviewContent = $("#review-content").val();
+
+
+
+    $.ajax({
+        url: url,
+        type: request_method,
+        data:JSON.stringify({"reviewTitle" : reviewTitle, "reviewContent" : reviewContent, "newsUrl" : reviewUrl}),
+    }).done(function (response) {
+        window.location.href = response;
+    });
+}
+
+function reviewDelete(index) {
+    var url = $("#delete-form" + index).attr("action");
+
+
+    var request_method = "DELETE";
+
+
+    $.ajax({
+        url: url,
+        type: request_method,
+    }).done(function (response) {
+        window.location.href = response;
+    });
+}
+
+function reviewModify() {
+    var url = "/review/" +$("#news-url").val();
+    var reviewTitle = $("#review-title").val();
+    var reviewContent = $("#review-content").val();
+    var request_method = "PUT";
+
+
+    $.ajax({
+        url: url,
+        type: request_method,
+        data:JSON.stringify({"reviewTitle" : reviewTitle, "reviewContent" : reviewContent}),
+    }).done(function (response) {
+        window.location.href = response;
+    });
+}
