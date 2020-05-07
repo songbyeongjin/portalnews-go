@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+{{template "header" .}}
+</head>
+
+<body id="page-top">
+  {{template "navigation" .}}
+   <div id="search-box" style="margin-top: 50px;" class="main-box col-lg-6 offset-md-3 col-md-8 offset-sm-2">
+       <div class="card card-inverse card-info">
+           <div class="card-header">
+               <div class="card-title">NEWS SEARCH FILTER</div>
+           </div>
+           <div style="padding-top: 30px;" class="card-block">
+               <div style="display: none;" id="login-alert" class="alert alert-danger col-md-12"></div>
+               <h5>PORTAL</h3>
+               <form id="search-form" class="" role="form" method="get" action="/search/news">
+                     <div class="custom-control custom-checkbox mb-3">
+                       <input type="checkbox" onclick ="portalCheckOtherToggle(this);" class="custom-control-input" id="check-all" checked name="check-portal" value="all">
+                       <label class="custom-control-label" for="check-all">ALL</label>
+                     </div>
+                     <div class="custom-control custom-checkbox mb-3">
+                       <input type="checkbox" onclick ="portalCheckAllToggle(this);" class="custom-control-input" id="check-naver" name="check-portal" value="naver">
+                       <label class="custom-control-label" for="check-naver">NAVER</label>
+                     </div>
+                     <div class="custom-control custom-checkbox mb-3">
+                       <input type="checkbox" onclick ="portalCheckAllToggle(this);" class="custom-control-input" id="check-nate" name="check-portal" value="nate">
+                       <label class="custom-control-label" for="check-nate">NATE</label>
+                     </div>
+                     <div class="custom-control custom-checkbox mb-3">
+                       <input type="checkbox" onclick ="portalCheckAllToggle(this);" class="custom-control-input" id="check-daum" name="check-portal" value="daum">
+                       <label class="custom-control-label" for="check-daum">DAUM</label>
+                     </div>
+
+                     <hr>
+                     <h5>LANGUAGE</h3>
+                     <div class="custom-control custom-radio">
+                       <input type="radio" class="custom-control-input" id="radio-korean" name="radio-language" value="korean" checked="checked">
+                       <label class="custom-control-label" for="radio-korean">한국어 KOREAN</label>
+                     </div>
+                     <div class="custom-control custom-radio">
+                       <input type="radio" class="custom-control-input" id="radio-japanese" name="radio-language" value="japanese">
+                       <label class="custom-control-label" for="radio-japanese">日本語 JAPANESE</label> *Japanese is only supported on Naver News.
+                     </div>
+                     <hr>
+
+                     <h5>TARGET</h3>
+                     <div class="form-group">
+                       <label for="target-select">TITLE or CONTENT</label>
+                       <select class="form-control" id="target-select" name="select-target">
+                         <option value="title">TITLE</option>
+                         <option value="content">CONTENT</option>
+                       </select>
+                     </div>
+
+                     <div style="margin-bottom: 5px;" class="input-group"z> <span class="input-group-addon"></span>
+                         <input id="login-username" type="text" class="form-control" placeholder="Enter Keyword" name="text-content"/>
+                     </div>
+
+                   <div style="margin-top: 10px;" class="form-group">
+                       <!-- Button -->
+                       <div class="col-md-12 controls">
+                           <input type="submit" id="btn-login" class="btn btn-success" value ="SEARCH">
+                       </div>
+                   </div>
+               </form>
+           </div>
+       </div>
+   </div>
+
+   <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="nate">
+     <div class="w-100">
+
+       {{if not .news }}
+       {{ else }}
+         {{ $tempLoginFlag := .loginFlag }}
+         {{ $tempLanguage := .language }}
+
+         {{ $newsTitle := "" }}
+         {{ $newsContent := "" }}
+         {{ $newsPress := "" }}
+
+         {{range .news}}
+           {{ if eq $tempLanguage "korean" }}
+             {{ $newsTitle =  .Title}}
+             {{ $newsContent =  .Content}}
+             {{ $newsPress = .Press }}
+           {{ else if eq $tempLanguage "japanese" }}
+             {{ $newsTitle = .TitleJapanese }}
+             {{ $newsContent = .ContentJapanese }}
+             {{ $newsPress = .PressJapanese }}
+           {{ end }}
+
+          <div class="resume-item d-flex flex-column flex-md-row justify-content-between mb-2">
+            <div class="resume-content">
+              <h5 class="mb-0" onclick="window.open('{{.Url | AddHttpsString}}', '_blank')">{{ $newsTitle }}</h5>
+              <div class="subheading cor">{{ $newsPress }}</div>
+              <p>
+                {{ $newsContent }}<br>
+              </p>
+            {{ if eq $tempLoginFlag true }}
+              <button onclick="location.href='/review/{{.Url}}'" id="review-btn" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i> REVIEW</button>
+            {{ end }}
+            <hr>
+            </div>
+            <div class="resume-date text-md-right">
+              <span class="text-primary">{{.Date.Format "2006-01-02"}}</span>
+            </div>
+          </div>
+         {{end}}
+
+       {{ end }}
+     </div>
+   </section>
+</body>
+
+</html>

@@ -47,6 +47,7 @@ function reviewPost(index) {
     });
 }
 
+
 function reviewDelete(index) {
     var url = $("#delete-form" + index).attr("action");
 
@@ -76,4 +77,52 @@ function reviewModify() {
     }).done(function (response) {
         window.location.href = response;
     });
+}
+
+function newsSearch() {
+    var url = "/search/news";
+    var reviewTitle = $("#review-title").val();
+    var reviewContent = $("#review-content").val();
+    var request_method = "PUT";
+
+    $.ajax({
+        url: url,
+        type: request_method,
+        data:JSON.stringify({"reviewTitle" : reviewTitle, "reviewContent" : reviewContent}),
+    }).done(function (response) {
+        window.location.href = response;
+    });
+}
+
+function portalCheckOtherToggle(source) {
+    naverBox = document.getElementById('check-naver');
+    nateBox = document.getElementById('check-daum');
+    daumBox = document.getElementById('check-nate');
+
+    if (source.checked) {
+        naverBox.checked = false
+        nateBox.checked = false
+        daumBox.checked = false
+    }
+    else{
+        naverBox.checked = true
+    }
+}
+
+function portalCheckAllToggle(source) {
+    allBox = document.getElementById('check-all');
+    naverBox = document.getElementById('check-naver');
+    nateBox = document.getElementById('check-nate');
+    daumBox = document.getElementById('check-daum');
+
+    if (source.checked) {
+        allBox.checked = false
+    }
+    if(naverBox.checked === false){
+        if(nateBox.checked === false){
+            if(daumBox.checked === false){
+                allBox.checked = true
+            }
+        }
+    }
 }

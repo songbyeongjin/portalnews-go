@@ -1,6 +1,18 @@
 package const_val
 
 const(
+	// *** Portal Name
+
+	Naver = "naver"
+	Nate = "nate"
+	daum = "daum"
+
+	// Portal Name ***
+
+	// *** Template Name
+	TemplateHome = "home"
+	// Template Name ***
+
 	LoginFlag = "loginFlag"
 	News      = "news"
 	UserKey   = "user"

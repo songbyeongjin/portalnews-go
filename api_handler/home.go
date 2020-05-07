@@ -8,7 +8,7 @@ import (
 )
 
 func HomeGet(c *gin.Context){
-	c.HTML(http.StatusOK, "home",gin.H{
+	c.HTML(http.StatusOK, const_val.TemplateHome,gin.H{
 		const_val.LoginFlag : service.GetLoginFlag(c),
 	})
 }

@@ -15,7 +15,7 @@ func LoginGet(c *gin.Context) {
 
 	//already log user handling
 	if logFlag{
-		c.HTML(http.StatusOK, "home", gin.H{
+		c.HTML(http.StatusOK, const_val.TemplateHome, gin.H{
 			const_val.LoginFlag : service.GetLoginFlag(c),
 		})
 		return
@@ -79,7 +79,7 @@ func GoogleOauthCallbackGet(c *gin.Context){
 
 	if cookieState != googleState{
 		log.Printf("invalid google oauth state")
-		c.HTML(http.StatusOK, "home",gin.H{
+		c.HTML(http.StatusOK, const_val.TemplateHome,gin.H{
 			const_val.LoginFlag : service.GetLoginFlag(c),
 		})
 	}
@@ -89,7 +89,7 @@ func GoogleOauthCallbackGet(c *gin.Context){
 
 	if err != nil{
 		log.Println(err)
-		c.HTML(http.StatusOK, "home",gin.H{
+		c.HTML(http.StatusOK, const_val.TemplateHome,gin.H{
 			const_val.LoginFlag : service.GetLoginFlag(c),
 		})
 	}
@@ -101,7 +101,7 @@ func GoogleOauthCallbackGet(c *gin.Context){
 		return
 	}
 
-	c.HTML(http.StatusOK, "home",gin.H{
+	c.HTML(http.StatusOK, const_val.TemplateHome,gin.H{
 		const_val.LoginFlag : service.GetLoginFlag(c),
 	})
 }

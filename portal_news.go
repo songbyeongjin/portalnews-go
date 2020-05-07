@@ -127,6 +127,13 @@ func setRouter() *gin.Engine{
 		reviewRouter.DELETE("/*queryUrl", api_handler.WriteReviewDELETE)
 	}
 
+	//set review group router
+	searchRouter := router.Group("/search").Use(service.LoginCheck())
+	{
+		searchRouter.GET("/", api_handler.SearchGet)
+		searchRouter.GET("/news", api_handler.SearchNewsGet)
+	}
+
 	return router
 }
 
@@ -138,7 +145,8 @@ func createRender() multitemplate.Renderer {
 	loginPath := rootPath + `login.tmpl`
 	notLoginPath := rootPath + `not_login.tmpl`
 	writeReviewPath := rootPath + `write_review.tmpl`
-	myPageath := rootPath + `mypage.tmpl`
+	myPagePath := rootPath + `mypage.tmpl`
+	searchPath := rootPath + `search.tmpl`
 
 
 	defineRootPath := `C:\Users\SONG\Documents\study\go\src\portal_news\templates\define\`
@@ -155,14 +163,17 @@ func createRender() multitemplate.Renderer {
 
 	r.AddFromFilesFuncs("myPage", template.FuncMap{
 		"AddHttpsString": service.AddHttpsString,
-	},myPageath, defineHeaderPath,defineNavigationPath)
+	},myPagePath, defineHeaderPath,defineNavigationPath)
+
+	r.AddFromFilesFuncs("search", template.FuncMap{
+		"AddHttpsString": service.AddHttpsString,
+	},searchPath, defineHeaderPath,defineNavigationPath)
 
 	r.AddFromFiles("home", homePath, defineHeaderPath, defineNavigationPath)
 	r.AddFromFiles("login", loginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
 	r.AddFromFiles("notLogin", notLoginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
 	r.AddFromFiles("writeReview", writeReviewPath, defineHeaderPath,defineNavigationPath)
-	//r.AddFromFiles("myPage", myPageath, defineHeaderPath,defineNavigationPath)
-	//r.AddFromFiles("news", rootPath + `news.tmpl`, headerPath)
+
 
 	return r
 }
