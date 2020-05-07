@@ -50,14 +50,12 @@ func WriteReviewGET(c *gin.Context) {
 }
 
 func WriteReviewPOST(c *gin.Context) {
-	fmt.Println("post in")
 	session := sessions.Default(c)
 
 	userId := fmt.Sprintf("%v", session.Get(const_val.UserKey))
 	bodyJson := &Jsonody{}
 
 	body, _ := ioutil.ReadAll(c.Request.Body)
-	fmt.Println(string(body))
 	err := json.Unmarshal(body, bodyJson)
 
 	if err != nil{

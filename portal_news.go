@@ -105,9 +105,10 @@ func setRouter() *gin.Engine{
 	newsRouter := router.Group("/news")
 	{
 		newsRouter.GET("/", api_handler.PortalGet)
-		newsRouter.GET("/naver", api_handler.Naverget)
+		newsRouter.GET("/naver", api_handler.NaverGet)
+		newsRouter.GET("/naver/:language", api_handler.NaverLanguageGet)
 		newsRouter.GET("/nate", api_handler.NateGet)
-		newsRouter.GET("/daum", api_handler.Daumget)
+		newsRouter.GET("/daum", api_handler.DaumGet)
 	}
 
 
