@@ -14,27 +14,27 @@ func LoginCheck() gin.HandlerFunc {
 		user := session.Get(const_val.UserKey)
 		if user == nil {
 			// Abort the request with the appropriate error code
-			c.HTML(http.StatusUnauthorized, "notLogin",gin.H{
-				const_val.LoginFlag : GetLoginFlag(c),
+			c.HTML(http.StatusUnauthorized, const_val.TmplFileNotLogin, gin.H{
+				const_val.TmplVarLoginFlag: GetLoginFlag(c),
 			})
 
 			c.Abort()
 			return
-		}else{
+		} else {
 			c.Set(const_val.UserKey, user)
 			c.Next()
 		}
 	}
 }
 
-func CreateSession(c *gin.Context, user *model.User) error{
+func CreateSession(c *gin.Context, user *model.User) error {
 	session := sessions.Default(c)
 	session.Set(const_val.UserKey, user.UserId)
 	err := session.Save()
 	return err
 }
 
-func DeleteSession(c *gin.Context) error{
+func DeleteSession(c *gin.Context) error {
 	session := sessions.Default(c)
 	session.Clear()
 	err := session.Save()

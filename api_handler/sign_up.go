@@ -14,10 +14,9 @@ func SignUpPost(c *gin.Context) {
 	userPass := c.PostForm("userPass")
 
 	user := &model.User{
-		UserId: userId,
+		UserId:   userId,
 		UserPass: userPass,
 	}
-
 
 	idNotExist, _ := service.UserExistCheck(user)
 	if !idNotExist {
@@ -26,8 +25,8 @@ func SignUpPost(c *gin.Context) {
 	}
 
 	db.Instance.Create(user)
-	c.HTML(http.StatusOK, "login", gin.H{
-		const_val.LoginFlag : service.GetLoginFlag(c),
-		"signUpId" : user.UserId,
+	c.HTML(http.StatusOK, const_val.TmplFileLogin, gin.H{
+		const_val.TmplVarLoginFlag: service.GetLoginFlag(c),
+		const_val.TmplVarSignUpId:  user.UserId,
 	})
 }

@@ -7,21 +7,19 @@ import (
 	"strings"
 )
 
-
-
 func AddHttpsString(url string) string {
-	if strings.Index(url, "v.media.daum.net/") == -1{
+	if strings.Index(url, "v.media.daum.net/") == -1 {
 		return const_val.HttpsUrl + url
-	}else{
+	} else {
 		return const_val.HttpUrl + url
 	}
 }
-func GetLoginFlag(c *gin.Context) bool{
+func GetLoginFlag(c *gin.Context) bool {
 	session := sessions.Default(c)
 	user := session.Get(const_val.UserKey)
-	if user != nil{
+	if user != nil {
 		return true
-	}else{
+	} else {
 		return false
 	}
 }

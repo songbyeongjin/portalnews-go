@@ -13,11 +13,12 @@ import (
 	"io/ioutil"
 	"os"
 	"portal_news/api_handler"
+	"portal_news/const_val"
 	"portal_news/db"
 	"portal_news/service"
 )
 
-func main(){
+func main() {
 	// *** Set Db
 
 	setDb()
@@ -59,12 +60,12 @@ func setDb() {
 }
 
 //Set Db information from yaml
-func getDbConnector() (*db.Connector, error){
+func getDbConnector() (*db.Connector, error) {
 	//temporary path for debug mode
 	buf, err := ioutil.ReadFile(`C:\Users\SONG\Documents\study\go\src\portal_news\db_info.yaml`)
 	if err != nil {
 		fmt.Println(err)
-		return nil,err
+		return nil, err
 	}
 
 	var connector *db.Connector
@@ -72,19 +73,18 @@ func getDbConnector() (*db.Connector, error){
 	err = yaml.Unmarshal(buf, &connector)
 	if err != nil {
 		fmt.Println(err)
-		return nil,err
+		return nil, err
 	}
 
 	return connector, nil
 }
 
-
 // Set router
-func setRouter() *gin.Engine{
+func setRouter() *gin.Engine {
 	router := gin.Default()
 
-	store := cookie.NewStore([]byte("secret"))//ToDo encryption
-	router.Use(sessions.Sessions("mysession", store))
+	store := cookie.NewStore([]byte(const_val.SessionKey))
+	router.Use(sessions.Sessions("mySession", store))
 
 	//temporary path for debug mode
 	router.Static("/assets", `C:\Users\SONG\Documents\study\go\src\portal_news\assets`)
@@ -104,13 +104,11 @@ func setRouter() *gin.Engine{
 	//set news group router
 	newsRouter := router.Group("/news")
 	{
-		newsRouter.GET("/", api_handler.PortalGet)
 		newsRouter.GET("/naver", api_handler.NaverGet)
 		newsRouter.GET("/naver/:language", api_handler.NaverLanguageGet)
 		newsRouter.GET("/nate", api_handler.NateGet)
 		newsRouter.GET("/daum", api_handler.DaumGet)
 	}
-
 
 	//set  mypage group router
 	myPageRouter := router.Group("/mypage").Use(service.LoginCheck())
@@ -148,32 +146,29 @@ func createRender() multitemplate.Renderer {
 	myPagePath := rootPath + `mypage.tmpl`
 	searchPath := rootPath + `search.tmpl`
 
-
 	defineRootPath := `C:\Users\SONG\Documents\study\go\src\portal_news\templates\define\`
 	defineHeaderPath := defineRootPath + `define_header.tmpl`
 	defineNavigationPath := defineRootPath + `define_navigation.tmpl`
 	defineLoginPath := defineRootPath + `define_login.tmpl`
 
-
 	r := multitemplate.NewRenderer()
 
-	r.AddFromFilesFuncs("news", template.FuncMap{
+	r.AddFromFilesFuncs(const_val.TmplFileNews, template.FuncMap{
 		"AddHttpsString": service.AddHttpsString,
-	},newsPath, defineHeaderPath, defineNavigationPath)
+	}, newsPath, defineHeaderPath, defineNavigationPath)
 
-	r.AddFromFilesFuncs("myPage", template.FuncMap{
+	r.AddFromFilesFuncs(const_val.TmplFileMypage, template.FuncMap{
 		"AddHttpsString": service.AddHttpsString,
-	},myPagePath, defineHeaderPath,defineNavigationPath)
+	}, myPagePath, defineHeaderPath, defineNavigationPath)
 
-	r.AddFromFilesFuncs("search", template.FuncMap{
+	r.AddFromFilesFuncs(const_val.TmplFileSerch, template.FuncMap{
 		"AddHttpsString": service.AddHttpsString,
-	},searchPath, defineHeaderPath,defineNavigationPath)
+	}, searchPath, defineHeaderPath, defineNavigationPath)
 
-	r.AddFromFiles("home", homePath, defineHeaderPath, defineNavigationPath)
-	r.AddFromFiles("login", loginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
-	r.AddFromFiles("notLogin", notLoginPath, defineHeaderPath,defineNavigationPath, defineLoginPath)
-	r.AddFromFiles("writeReview", writeReviewPath, defineHeaderPath,defineNavigationPath)
-
+	r.AddFromFiles(const_val.TmplFileHome, homePath, defineHeaderPath, defineNavigationPath)
+	r.AddFromFiles(const_val.TmplFileLogin, loginPath, defineHeaderPath, defineNavigationPath, defineLoginPath)
+	r.AddFromFiles(const_val.TmplFileNotLogin, notLoginPath, defineHeaderPath, defineNavigationPath, defineLoginPath)
+	r.AddFromFiles(const_val.TmplFileWriteReview, writeReviewPath, defineHeaderPath, defineNavigationPath)
 
 	return r
 }

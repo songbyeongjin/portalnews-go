@@ -6,23 +6,23 @@ import (
 	"time"
 )
 
-type DisplayReviewTemplate struct{
-	Portal string
-	NewsUrl string
-	NewsTitle string
+type DisplayReviewTemplate struct {
+	Portal      string
+	NewsUrl     string
+	NewsTitle   string
 	NewsContent string
-	Title   string
-	Content string
-	Date    time.Time
+	Title       string
+	Content     string
+	Date        time.Time
 }
 
 func GetReviewTemplates(userId string) *[]DisplayReviewTemplate {
 	reviews := &[]model.Review{}
-	db.Instance.Order("date DESC", true).Find(reviews,"user_id=?", userId)
+	db.Instance.Order("date DESC", true).Find(reviews, "user_id=?", userId)
 
 	reviewTemplates := &[]DisplayReviewTemplate{}
 
-	for _,r := range *reviews{
+	for _, r := range *reviews {
 		reviewTemplate := DisplayReviewTemplate{}
 
 		reviewTemplate.NewsUrl = r.NewsUrl
@@ -31,12 +31,12 @@ func GetReviewTemplates(userId string) *[]DisplayReviewTemplate {
 		reviewTemplate.Date = r.Date
 
 		news := &model.News{}
-		db.Instance.Find(news,"url=?", r.NewsUrl)
+		db.Instance.Find(news, "url=?", r.NewsUrl)
 
-		if news.Portal == "naver"{
+		if news.Portal == "naver" {
 			reviewTemplate.NewsTitle = news.TitleJapanese
 			reviewTemplate.NewsContent = news.ContentJapanese
-		}else{
+		} else {
 			reviewTemplate.NewsTitle = news.Title
 			reviewTemplate.NewsContent = news.Content
 		}

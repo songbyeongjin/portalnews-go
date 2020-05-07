@@ -9,9 +9,6 @@ import (
 	"portal_news/service"
 )
 
-
-
-
 func MyPageGet(c *gin.Context) {
 	session := sessions.Default(c)
 
@@ -19,10 +16,9 @@ func MyPageGet(c *gin.Context) {
 
 	reviewTemplates := service.GetReviewTemplates(userId)
 
-
-	c.HTML(http.StatusOK, "myPage",gin.H{
-		"userId"  : userId,
-		"reviews" : reviewTemplates,
-		const_val.LoginFlag : service.GetLoginFlag(c),
+	c.HTML(http.StatusOK, const_val.TmplFileMypage, gin.H{
+		const_val.TmplVarUserId:    userId,
+		const_val.TmplVarReviews:   reviewTemplates,
+		const_val.TmplVarLoginFlag: service.GetLoginFlag(c),
 	})
 }

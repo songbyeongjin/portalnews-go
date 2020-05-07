@@ -7,8 +7,8 @@ import (
 	"portal_news/service"
 )
 
-func HomeGet(c *gin.Context){
-	c.HTML(http.StatusOK, const_val.TemplateHome,gin.H{
-		const_val.LoginFlag : service.GetLoginFlag(c),
+func HomeGet(c *gin.Context) {
+	c.HTML(http.StatusOK, const_val.TmplFileHome, gin.H{
+		const_val.TmplVarLoginFlag: service.GetLoginFlag(c),
 	})
 }

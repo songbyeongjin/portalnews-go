@@ -9,54 +9,52 @@ import (
 	"portal_news/service"
 )
 
-func NaverGet(c *gin.Context){
+func NaverGet(c *gin.Context) {
 	rankingNews := []model.RankingNews{}
 
-	db.Instance.Where("portal = ?", "naver").Find(&rankingNews)
+	db.Instance.Where("portal = ?", const_val.Naver).Find(&rankingNews)
 
-	c.HTML(http.StatusOK, "news",gin.H{
-		const_val.News:       rankingNews,
-		const_val.LoginFlag : service.GetLoginFlag(c),
-		"language" : "japanese",
+	c.HTML(http.StatusOK, const_val.TmplFileNews, gin.H{
+		const_val.TmplVarNews:      rankingNews,
+		const_val.TmplVarLoginFlag: service.GetLoginFlag(c),
+		const_val.TmplVarLanguage:  const_val.TmplVarJapanese,
 	})
 }
 
-func DaumGet(c *gin.Context){
+func DaumGet(c *gin.Context) {
 	rankingNews := []model.RankingNews{}
 
-	db.Instance.Where("portal = ?", "daum").Find(&rankingNews)
+	db.Instance.Where("portal = ?", const_val.Daum).Find(&rankingNews)
 
-	c.HTML(http.StatusOK, "news",gin.H{
-		const_val.News:       rankingNews,
-		const_val.LoginFlag : service.GetLoginFlag(c),
-		"language" : "korean",
+	c.HTML(http.StatusOK, const_val.TmplFileNews, gin.H{
+		const_val.TmplVarNews:      rankingNews,
+		const_val.TmplVarLoginFlag: service.GetLoginFlag(c),
+		const_val.TmplVarLanguage:  const_val.TmplVarKorean,
 	})
 }
 
-func NateGet(c *gin.Context){
+func NateGet(c *gin.Context) {
 	rankingNews := []model.RankingNews{}
 
-	db.Instance.Where("portal = ?", "nate").Find(&rankingNews)
+	db.Instance.Where("portal = ?", const_val.Nate).Find(&rankingNews)
 
-	c.HTML(http.StatusOK, "news",gin.H{
-		const_val.News:       rankingNews,
-		const_val.LoginFlag : service.GetLoginFlag(c),
-		"language" : "korean",
+	c.HTML(http.StatusOK, const_val.TmplFileNews, gin.H{
+		const_val.TmplVarNews:      rankingNews,
+		const_val.TmplVarLoginFlag: service.GetLoginFlag(c),
+		const_val.TmplVarLanguage:  const_val.TmplVarKorean,
 	})
 }
 
-
-func NaverLanguageGet(c *gin.Context){
+func NaverLanguageGet(c *gin.Context) {
 	language := c.Param("language")
 
-
 	rankingNews := []model.RankingNews{}
 
-	db.Instance.Where("portal = ?", "naver").Find(&rankingNews)
+	db.Instance.Where("portal = ?", const_val.Naver).Find(&rankingNews)
 
-	c.HTML(http.StatusOK, "news",gin.H{
-		const_val.News:       rankingNews,
-		const_val.LoginFlag : service.GetLoginFlag(c),
-		"language" : language,
+	c.HTML(http.StatusOK, const_val.TmplFileNews, gin.H{
+		const_val.TmplVarNews:      rankingNews,
+		const_val.TmplVarLoginFlag: service.GetLoginFlag(c),
+		const_val.TmplVarLanguage:  language,
 	})
 }

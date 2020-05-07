@@ -5,31 +5,31 @@ import (
 	"portal_news/model"
 )
 
-type CreateReviewTemplate struct{
-	NewsUrl string
-	NewsTitle string
-	Portal string
-	Press string
+type CreateReviewTemplate struct {
+	NewsUrl       string
+	NewsTitle     string
+	Portal        string
+	Press         string
 	ReviewTitle   string
 	ReviewContent string
 }
 
-func GetCreateReviewTemplate(userId string, newsUrl string) (*CreateReviewTemplate, bool){
+func GetCreateReviewTemplate(userId string, newsUrl string) (*CreateReviewTemplate, bool) {
 	createReviewTemplate := &CreateReviewTemplate{}
 	review := &model.Review{}
 
 	var news = &model.News{}
-	newsNotExist :=  db.Instance.Where("url = ?", newsUrl).First(news).RecordNotFound()
-	if newsNotExist{
-		return nil,false
+	newsNotExist := db.Instance.Where("url = ?", newsUrl).First(news).RecordNotFound()
+	if newsNotExist {
+		return nil, false
 	}
 
 	createReviewTemplate.Portal = news.Portal
 	createReviewTemplate.NewsUrl = newsUrl
-	if news.Portal == "naver"{
+	if news.Portal == "naver" {
 		createReviewTemplate.NewsTitle = news.TitleJapanese
 		createReviewTemplate.Press = news.PressJapanese
-	}else{
+	} else {
 		createReviewTemplate.NewsTitle = news.Title
 		createReviewTemplate.Press = news.Press
 	}
