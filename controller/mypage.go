@@ -1,4 +1,4 @@
-package api_handler
+package controller
 
 import (
 	"fmt"

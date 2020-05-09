@@ -39,7 +39,7 @@ const (
 	// *** Session/Oauth
 	SessionKey = "secret"
 	UserKey     = "user"
-	StateCookie = "stats"
+	StateCookie = "state"
 	OauthGoogleCookieName = "googleState"
 	OauthGoogleUrlAPI     = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 	// Session/Oauth ***

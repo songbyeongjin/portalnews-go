@@ -12,8 +12,8 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"portal_news/api_handler"
 	"portal_news/const_val"
+	"portal_news/controller"
 	"portal_news/db"
 	"portal_news/service"
 )
@@ -93,43 +93,43 @@ func setRouter() *gin.Engine {
 	router.HTMLRender = createRender()
 
 	//set auth router
-	router.GET("/", api_handler.HomeGet)
-	router.GET("/login", api_handler.LoginGet)
-	router.POST("/login-auth", api_handler.LoginAuthPost)
-	router.GET("/google-oauth", api_handler.GoogleOauthGet)
-	router.GET("/google-oauth/callback", api_handler.GoogleOauthCallbackGet)
-	router.GET("/logout", api_handler.LogoutGet)
-	router.POST("/signup", api_handler.SignUpPost)
+	router.GET("/", controller.HomeGet)
+	router.GET("/login", controller.LoginGet)
+	router.POST("/login-auth", controller.LoginAuthPost)
+	router.GET("/google-oauth", controller.GoogleOauthGet)
+	router.GET("/google-oauth/callback", controller.GoogleOauthCallbackGet)
+	router.GET("/logout", controller.LogoutGet)
+	router.POST("/signup", controller.SignUpPost)
 
 	//set news group router
 	newsRouter := router.Group("/news")
 	{
-		newsRouter.GET("/naver", api_handler.NaverGet)
-		newsRouter.GET("/naver/:language", api_handler.NaverLanguageGet)
-		newsRouter.GET("/nate", api_handler.NateGet)
-		newsRouter.GET("/daum", api_handler.DaumGet)
+		newsRouter.GET("/naver", controller.NaverGet)
+		newsRouter.GET("/naver/:language", controller.NaverLanguageGet)
+		newsRouter.GET("/nate", controller.NateGet)
+		newsRouter.GET("/daum", controller.DaumGet)
 	}
 
 	//set  mypage group router
 	myPageRouter := router.Group("/mypage").Use(service.LoginCheck())
 	{
-		myPageRouter.GET("/", api_handler.MyPageGet)
+		myPageRouter.GET("/", controller.MyPageGet)
 	}
 
 	//set review group router
 	reviewRouter := router.Group("/review").Use(service.LoginCheck())
 	{
-		reviewRouter.GET("/*queryUrl", api_handler.WriteReviewGET)
-		reviewRouter.POST("/*queryUrl", api_handler.WriteReviewPOST)
-		reviewRouter.PUT("/*queryUrl", api_handler.WriteReviewPUT)
-		reviewRouter.DELETE("/*queryUrl", api_handler.WriteReviewDELETE)
+		reviewRouter.GET("/*queryUrl", controller.WriteReviewGET)
+		reviewRouter.POST("/*queryUrl", controller.WriteReviewPOST)
+		reviewRouter.PUT("/*queryUrl", controller.WriteReviewPUT)
+		reviewRouter.DELETE("/*queryUrl", controller.WriteReviewDELETE)
 	}
 
 	//set review group router
 	searchRouter := router.Group("/search").Use(service.LoginCheck())
 	{
-		searchRouter.GET("/", api_handler.SearchGet)
-		searchRouter.GET("/news", api_handler.SearchNewsGet)
+		searchRouter.GET("/", controller.SearchGet)
+		searchRouter.GET("/news", controller.SearchNewsGet)
 	}
 
 	return router
