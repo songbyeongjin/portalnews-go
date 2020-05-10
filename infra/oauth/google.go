@@ -8,7 +8,7 @@ import (
 	"portal_news/service"
 )
 
-type OauthGoogleApiInfo struct {
+type GoogleApiInfo struct {
 	ID   string `yaml:"oauth_google_id"`
 	Pass string `yaml:"oauth_google_pass"`
 }
@@ -22,7 +22,7 @@ func SetOauthGoogleConfig() {
 	service.OauthGoogleConfig.Endpoint = google.Endpoint
 }
 
-func GetOauthGoogleInfo() (*OauthGoogleApiInfo, error) {
+func GetOauthGoogleInfo() (*GoogleApiInfo, error) {
 	//temporary path for debug mode
 	buf, err := ioutil.ReadFile(`C:\Users\SONG\Documents\study\go\src\portal_news\oauth_google.yaml`)
 	if err != nil {
@@ -30,7 +30,7 @@ func GetOauthGoogleInfo() (*OauthGoogleApiInfo, error) {
 		return nil, err
 	}
 
-	var oauthGoogleInfo *OauthGoogleApiInfo
+	var oauthGoogleInfo *GoogleApiInfo
 
 	err = yaml.Unmarshal(buf, &oauthGoogleInfo)
 	if err != nil {

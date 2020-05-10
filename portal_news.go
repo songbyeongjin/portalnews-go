@@ -5,7 +5,7 @@ import (
 	_ "github.com/lib/pq"
 	"io"
 	"os"
-	g "portal_news/infra/gin"
+	"portal_news/infra/gin_route"
 	"portal_news/infra/oauth"
 )
 
@@ -21,7 +21,7 @@ func main() {
 	f, _ := os.Create("./server.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
 
-	router := g.SetRouter()
+	router := gin_route.SetRouter()
 
 	// Set Router ***
 

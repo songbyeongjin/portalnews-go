@@ -7,10 +7,10 @@ import (
 )
 
 type ReviewRepository struct {
-	dbHandler db.DbHandler
+	dbHandler db.Handler
 }
 
-func NewReviewRepository(dbHandler db.DbHandler) repository_interface.ReviewRepository {
+func NewReviewRepository(dbHandler db.Handler) repository_interface.ReviewRepository {
 	reviewRepository := ReviewRepository{dbHandler}
 	return &reviewRepository
 }

@@ -43,12 +43,12 @@ func getDbConnector() (*DbConnector, error) {
 
 
 
-type DbHandler struct {
+type Handler struct {
 	Conn *gorm.DB
 }
 
-func NewDbHandler() *DbHandler {
-	dbHandler := &DbHandler{}
+func NewDbHandler() *Handler {
+	dbHandler := &Handler{}
 	DbConnector, err := getDbConnector()
 
 	if err != nil{

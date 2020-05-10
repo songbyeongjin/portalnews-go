@@ -7,10 +7,10 @@ import (
 )
 
 type UserRepository struct {
-	dbHandler db.DbHandler
+	dbHandler db.Handler
 }
 
-func NewUserRepository(dbHandler db.DbHandler) repository_interface.UserRepository {
+func NewUserRepository(dbHandler db.Handler) repository_interface.UserRepository {
 	userRepository := UserRepository{dbHandler}
 	return &userRepository
 }
