@@ -1,4 +1,4 @@
-package gin_infra
+package gin_route
 
 import (
 	"github.com/gin-contrib/multitemplate"
@@ -8,36 +8,51 @@ import (
 	"html/template"
 	"portal_news/common"
 	c "portal_news/controller"
-	"portal_news/infra/gin/middle_ware"
+	"portal_news/infra/gin_route/middle_ware"
 	"portal_news/injection"
 )
 
 func SetRouter() *gin.Engine{
-	mainController := injection.InjectMainController()
-	newsController := injection.InjectRankingNewsController()
-	reviewController := injection.InjectReviewController()
-	myPageController := injection.InjectMyPageController()
-	searchController := injection.InjectSearchController()
-	loginController := injection.InjectLoginController()
-	logoutController := injection.InjectLogoutController()
-	userController := injection.InjectUserController()
+
+	rankingNewsR := injection.InjectRankingNewsRepository()
+	reviewR := injection.InjectReviewRepository()
+	userR := injection.InjectUserRepository()
+	newsR := injection.InjectNewsRepository()
+
+	rankingNewsS := injection.InjectRankingNewsService(rankingNewsR)
+	reviewS := injection.InjectReviewService(reviewR,newsR)
+	searchS := injection.InjectSearchService(newsR)
+	userS := injection.InjectUserService(userR)
+	logoutS := injection.InjectLogoutService()
+	loginS := injection.InjectLoginService(userR)
+	myPageS := injection.InjectMyPageService(reviewR, newsR)
+
+	rankingNewsC := injection.InjectRankingNewsController(rankingNewsS)
+	reviewC := injection.InjectReviewController(reviewS)
+	myPageC := injection.InjectMyPageController(myPageS)
+	searchC := injection.InjectSearchController(searchS)
+	userC := injection.InjectUserController(userS)
+	loginC := injection.InjectLoginController(loginS)
+	logoutC := injection.InjectLogoutController(logoutS)
+	mainC := injection.InjectMainController()
+
 
 	r := GetRouter(
-		mainController,
-		newsController,
-		reviewController,
-		myPageController,
-		searchController,
-		loginController,
-		logoutController,
-		userController)
+		mainC,
+		rankingNewsC,
+		reviewC,
+		myPageC,
+		searchC,
+		loginC,
+		logoutC,
+		userC)
 
 	return r
 }
 
 
 func GetRouter(
-	maincontroller c.MainController,
+	mainController c.MainController,
 	rankingNewsController c.RankingNewsController,
 	reviewController c.ReviewController,
 	myPageController c.MyPageController,
@@ -58,7 +73,7 @@ func GetRouter(
 	router.HTMLRender = getRender()
 
 	//set home router
-	router.GET("/", maincontroller.HomeGet)
+	router.GET("/", mainController.HomeGet)
 
 	//set login group router
 	loginRouter := router.Group("/login")

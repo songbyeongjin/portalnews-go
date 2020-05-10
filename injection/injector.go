@@ -8,9 +8,9 @@ import (
 	"portal_news/service"
 )
 
-var dbInstance *db.DbHandler
+var dbInstance *db.Handler
 
-func injectDB() db.DbHandler {
+func injectDB() db.Handler {
 	if dbInstance == nil{
 		dbInstance = db.NewDbHandler()
 	}
@@ -18,137 +18,105 @@ func injectDB() db.DbHandler {
 	return *dbInstance
 }
 
-// *** ranking news injection
+// *** repository injection
 
-func injectRankingNewsRepository() repository_interface.RankingNewsRepository {
+func InjectRankingNewsRepository() repository_interface.RankingNewsRepository {
 	dbHandler := injectDB()
 	return repository_impl.NewRankingNewsRepository(dbHandler)
 }
 
-func injectRankingNewsService() service.RankingNewsService {
-	RankingNewsRepository := injectRankingNewsRepository()
-	return service.NewRankingNewsService(RankingNewsRepository)
-}
-
-func InjectRankingNewsController() controller.RankingNewsController {
-	return controller.NewRankingNewsController(injectRankingNewsService())
-}
-
-
-// ranking news injection ***
-
-
-// *** news injection
-
-func injectNewsRepository() repository_interface.NewsRepository {
+func InjectNewsRepository() repository_interface.NewsRepository {
 	dbHandler := injectDB()
 	return repository_impl.NewNewsRepository(dbHandler)
 }
 
-//  news injection ***
-
-
-// *** review injection
-
-func injectReviewRepository() repository_interface.ReviewRepository {
+func InjectReviewRepository() repository_interface.ReviewRepository {
 	dbHandler := injectDB()
 	return repository_impl.NewReviewRepository(dbHandler)
 }
 
-func injectReviewService() service.ReviewService {
-	ReviewRepository := injectReviewRepository()
-	newsRepository := injectNewsRepository()
-	return service.NewReviewService(ReviewRepository, newsRepository)
-}
-
-func InjectReviewController() controller.ReviewController {
-	return controller.NewReviewController(injectReviewService())
-}
-
-//  review injection ***
-
-
-// *** my page injection
-
-func injectMyPageService() service.MyPageService {
-	ReviewRepository := injectReviewRepository()
-	newsRepository := injectNewsRepository()
-	return service.NewMyPageService(ReviewRepository, newsRepository)
-}
-
-func InjectMyPageController() controller.MyPageController {
-	return controller.NewMyPageController(injectMyPageService())
-}
-
-//  my page injection ***
-
-
-// *** search injection
-
-func injectSearchService() service.SearchService {
-	newsRepository := injectNewsRepository()
-	return service.NewSearchService(newsRepository)
-}
-
-func InjectSearchController() controller.SearchController {
-	return controller.NewSearchController(injectSearchService())
-}
-
-//  search injection ***
-
-// *** user injection
-
-func injectUserRepository() repository_interface.UserRepository {
+func InjectUserRepository() repository_interface.UserRepository {
 	dbHandler := injectDB()
 	return repository_impl.NewUserRepository(dbHandler)
 }
 
-// user injection  ***
+// repository injection ***
 
-// *** login injection
 
-func injectLoginService() service.LoginService {
-	userRepository := injectUserRepository()
+
+// *** service injection
+
+func InjectRankingNewsService(rr repository_interface.RankingNewsRepository) service.RankingNewsService {
+	RankingNewsRepository := rr
+	return service.NewRankingNewsService(RankingNewsRepository)
+}
+
+func InjectReviewService(rr repository_interface.ReviewRepository, nr repository_interface.NewsRepository) service.ReviewService {
+	ReviewRepository := rr
+	newsRepository := nr
+	return service.NewReviewService(ReviewRepository, newsRepository)
+}
+
+func InjectMyPageService(rr repository_interface.ReviewRepository, nr repository_interface.NewsRepository) service.MyPageService {
+	ReviewRepository := rr
+	newsRepository := nr
+	return service.NewMyPageService(ReviewRepository, newsRepository)
+}
+
+func InjectLoginService(ur repository_interface.UserRepository) service.LoginService {
+	userRepository := ur
 	return service.NewLoginService(userRepository)
 }
 
-func InjectLoginController() controller.LoginController {
-	return controller.NewLoginController(injectLoginService())
-}
-
-//  login injection ***
-
-// *** logout injection
-
-func injectLogoutService() service.LogoutService {
+func InjectLogoutService() service.LogoutService {
 	return service.NewLogoutService()
 }
 
-func InjectLogoutController() controller.LogoutController {
-	return controller.NewLogoutController(injectLogoutService())
-}
-
-//  logout injection ***
-
-
-// *** user injection
-
-func injectUserService() service.UserService {
-	userRepository := injectUserRepository()
+func InjectUserService(ur repository_interface.UserRepository) service.UserService {
+	userRepository := ur
 	return service.NewUserService(userRepository)
 }
 
-func InjectUserController() controller.UserController {
-	return controller.NewUserController(injectUserService())
+func InjectSearchService(nr repository_interface.NewsRepository) service.SearchService {
+	newsRepository := nr
+	return service.NewSearchService(newsRepository)
 }
 
-//  user injection ***
+//  service injection ***
 
 
-// *** main injection
+
+// *** controller injection
 
 func InjectMainController() controller.MainController {
 	return controller.NewMainController()
 }
 
-//  main injection ***
+func InjectRankingNewsController(rs service.RankingNewsService) controller.RankingNewsController {
+	return controller.NewRankingNewsController(rs)
+}
+func InjectReviewController(rs service.ReviewService) controller.ReviewController {
+	return controller.NewReviewController(rs)
+}
+
+func InjectMyPageController(ms service.MyPageService) controller.MyPageController {
+	return controller.NewMyPageController(ms)
+}
+
+func InjectSearchController(ss service.SearchService) controller.SearchController {
+	return controller.NewSearchController(ss)
+}
+
+func InjectLoginController(ls service.LoginService) controller.LoginController {
+	return controller.NewLoginController(ls)
+}
+
+func InjectLogoutController(ls service.LogoutService) controller.LogoutController {
+	return controller.NewLogoutController(ls)
+}
+
+func InjectUserController(us service.UserService) controller.UserController {
+	return controller.NewUserController(us)
+}
+
+//  controller injection ***
