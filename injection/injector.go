@@ -1,11 +1,11 @@
 package injection
 
 import (
-	"portal_news/controller_clean"
-	"portal_news/domain_clean/repository_interface"
-	"portal_news/infra_clean/db"
-	"portal_news/infra_clean/db/repository_impl"
-	"portal_news/service_clean"
+	"portal_news/controller"
+	"portal_news/domain/repository_interface"
+	"portal_news/infra/db"
+	"portal_news/infra/db/repository_impl"
+	"portal_news/service"
 )
 
 var dbInstance *db.DbHandler
@@ -25,13 +25,13 @@ func injectRankingNewsRepository() repository_interface.RankingNewsRepository {
 	return repository_impl.NewRankingNewsRepository(dbHandler)
 }
 
-func injectRankingNewsService() service_clean.RankingNewsService {
+func injectRankingNewsService() service.RankingNewsService {
 	RankingNewsRepository := injectRankingNewsRepository()
-	return service_clean.NewRankingNewsService(RankingNewsRepository)
+	return service.NewRankingNewsService(RankingNewsRepository)
 }
 
-func InjectRankingNewsController() controller_clean.RankingNewsController {
-	return controller_clean.NewRankingNewsController(injectRankingNewsService())
+func InjectRankingNewsController() controller.RankingNewsController {
+	return controller.NewRankingNewsController(injectRankingNewsService())
 }
 
 
@@ -55,14 +55,14 @@ func injectReviewRepository() repository_interface.ReviewRepository {
 	return repository_impl.NewReviewRepository(dbHandler)
 }
 
-func injectReviewService() service_clean.ReviewService {
+func injectReviewService() service.ReviewService {
 	ReviewRepository := injectReviewRepository()
 	newsRepository := injectNewsRepository()
-	return service_clean.NewReviewService(ReviewRepository, newsRepository)
+	return service.NewReviewService(ReviewRepository, newsRepository)
 }
 
-func InjectReviewController() controller_clean.ReviewController {
-	return controller_clean.NewReviewController(injectReviewService())
+func InjectReviewController() controller.ReviewController {
+	return controller.NewReviewController(injectReviewService())
 }
 
 //  review injection ***
@@ -70,14 +70,14 @@ func InjectReviewController() controller_clean.ReviewController {
 
 // *** my page injection
 
-func injectMyPageService() service_clean.MyPageService {
+func injectMyPageService() service.MyPageService {
 	ReviewRepository := injectReviewRepository()
 	newsRepository := injectNewsRepository()
-	return service_clean.NewMyPageService(ReviewRepository, newsRepository)
+	return service.NewMyPageService(ReviewRepository, newsRepository)
 }
 
-func InjectMyPageController() controller_clean.MyPageController {
-	return controller_clean.NewMyPageController(injectMyPageService())
+func InjectMyPageController() controller.MyPageController {
+	return controller.NewMyPageController(injectMyPageService())
 }
 
 //  my page injection ***
@@ -85,13 +85,13 @@ func InjectMyPageController() controller_clean.MyPageController {
 
 // *** search injection
 
-func injectSearchService() service_clean.SearchService {
+func injectSearchService() service.SearchService {
 	newsRepository := injectNewsRepository()
-	return service_clean.NewSearchService(newsRepository)
+	return service.NewSearchService(newsRepository)
 }
 
-func InjectSearchController() controller_clean.SearchController {
-	return controller_clean.NewSearchController(injectSearchService())
+func InjectSearchController() controller.SearchController {
+	return controller.NewSearchController(injectSearchService())
 }
 
 //  search injection ***
@@ -107,25 +107,25 @@ func injectUserRepository() repository_interface.UserRepository {
 
 // *** login injection
 
-func injectLoginService() service_clean.LoginService {
+func injectLoginService() service.LoginService {
 	userRepository := injectUserRepository()
-	return service_clean.NewLoginService(userRepository)
+	return service.NewLoginService(userRepository)
 }
 
-func InjectLoginController() controller_clean.LoginController {
-	return controller_clean.NewLoginController(injectLoginService())
+func InjectLoginController() controller.LoginController {
+	return controller.NewLoginController(injectLoginService())
 }
 
 //  login injection ***
 
 // *** logout injection
 
-func injectLogoutService() service_clean.LogoutService {
-	return service_clean.NewLogoutService()
+func injectLogoutService() service.LogoutService {
+	return service.NewLogoutService()
 }
 
-func InjectLogoutController() controller_clean.LogoutController {
-	return controller_clean.NewLogoutController(injectLogoutService())
+func InjectLogoutController() controller.LogoutController {
+	return controller.NewLogoutController(injectLogoutService())
 }
 
 //  logout injection ***
@@ -133,13 +133,13 @@ func InjectLogoutController() controller_clean.LogoutController {
 
 // *** user injection
 
-func injectUserService() service_clean.UserService {
+func injectUserService() service.UserService {
 	userRepository := injectUserRepository()
-	return service_clean.NewUserService(userRepository)
+	return service.NewUserService(userRepository)
 }
 
-func InjectUserController() controller_clean.UserController {
-	return controller_clean.NewUserController(injectUserService())
+func InjectUserController() controller.UserController {
+	return controller.NewUserController(injectUserService())
 }
 
 //  user injection ***
@@ -147,8 +147,8 @@ func InjectUserController() controller_clean.UserController {
 
 // *** main injection
 
-func InjectMainController() controller_clean.MainController {
-	return controller_clean.NewMainController()
+func InjectMainController() controller.MainController {
+	return controller.NewMainController()
 }
 
 //  main injection ***

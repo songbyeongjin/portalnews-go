@@ -1,5 +1,11 @@
 package common
 
+import (
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"strings"
+)
+
 const (
 	// *** Portal Name
 	Naver = "naver"
@@ -50,15 +56,15 @@ const (
 
 func AddHttpsString(url string) string {
 	if strings.Index(url, "v.media.daum.net/") == -1 {
-		return common.HttpsUrl + url
+		return HttpsUrl + url
 	} else {
-		return common.HttpUrl + url
+		return HttpUrl + url
 	}
 }
 
 func GetLoginFlag(c *gin.Context) bool {
 	session := sessions.Default(c)
-	user := session.Get(common.UserKey)
+	user := session.Get(UserKey)
 	if user != nil {
 		return true
 	} else {
