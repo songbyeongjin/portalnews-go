@@ -1,17 +1,18 @@
-package service
+package impl
 
 import (
 	"net/url"
 	"portal_news/common"
 	"portal_news/domain/model"
 	"portal_news/domain/repository_interface"
+	"portal_news/service"
 )
 
 type searchService struct {
 	newsRepository   repository_interface.NewsRepository
 }
 
-func NewSearchService(newsRepository repository_interface.NewsRepository) SearchService {
+func NewSearchService(newsRepository repository_interface.NewsRepository) service.SearchService {
 	searchService := searchService{
 		newsRepository: newsRepository}
 

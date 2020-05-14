@@ -6,6 +6,7 @@ import (
 	"portal_news/infra/db"
 	"portal_news/infra/db/repository_impl"
 	"portal_news/service"
+	"portal_news/service/impl"
 )
 
 var dbInstance *db.Handler
@@ -48,38 +49,38 @@ func InjectUserRepository() repository_interface.UserRepository {
 
 func InjectRankingNewsService(rr repository_interface.RankingNewsRepository) service.RankingNewsService {
 	RankingNewsRepository := rr
-	return service.NewRankingNewsService(RankingNewsRepository)
+	return impl.NewRankingNewsService(RankingNewsRepository)
 }
 
 func InjectReviewService(rr repository_interface.ReviewRepository, nr repository_interface.NewsRepository) service.ReviewService {
 	ReviewRepository := rr
 	newsRepository := nr
-	return service.NewReviewService(ReviewRepository, newsRepository)
+	return impl.NewReviewService(ReviewRepository, newsRepository)
 }
 
 func InjectMyPageService(rr repository_interface.ReviewRepository, nr repository_interface.NewsRepository) service.MyPageService {
 	ReviewRepository := rr
 	newsRepository := nr
-	return service.NewMyPageService(ReviewRepository, newsRepository)
+	return impl.NewMyPageService(ReviewRepository, newsRepository)
 }
 
 func InjectLoginService(ur repository_interface.UserRepository) service.LoginService {
 	userRepository := ur
-	return service.NewLoginService(userRepository)
+	return impl.NewLoginService(userRepository)
 }
 
 func InjectLogoutService() service.LogoutService {
-	return service.NewLogoutService()
+	return impl.NewLogoutService()
 }
 
 func InjectUserService(ur repository_interface.UserRepository) service.UserService {
 	userRepository := ur
-	return service.NewUserService(userRepository)
+	return impl.NewUserService(userRepository)
 }
 
 func InjectSearchService(nr repository_interface.NewsRepository) service.SearchService {
 	newsRepository := nr
-	return service.NewSearchService(newsRepository)
+	return impl.NewSearchService(newsRepository)
 }
 
 //  service injection ***

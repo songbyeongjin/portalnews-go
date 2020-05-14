@@ -3,12 +3,13 @@ package db
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 )
 
-type DbConnector struct {
+type Connector struct {
 	Dialect  string `yaml:"dialect"`
 	Host     string `yaml:"host"`
 	Dbname   string `yaml:"db_name"`
@@ -17,12 +18,12 @@ type DbConnector struct {
 	Password string `yaml:"password"`
 }
 
-func (d *DbConnector) GetConnectString() string {
+func (d *Connector) GetConnectString() string {
 	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", d.Host, d.Port, d.User, d.Dbname, d.Password)
 }
 
 //Set Db information from yaml
-func getDbConnector() (*DbConnector, error) {
+func getDbConnector() (*Connector, error) {
 	//temporary path for debug mode
 	buf, err := ioutil.ReadFile(`C:\Users\SONG\Documents\study\go\src\portal_news\db_info.yaml`)
 	if err != nil {
@@ -30,7 +31,7 @@ func getDbConnector() (*DbConnector, error) {
 		return nil, err
 	}
 
-	var dbConnector DbConnector
+	var dbConnector Connector
 
 	err = yaml.Unmarshal(buf, &dbConnector)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"golang.org/x/oauth2/google"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"portal_news/service"
+	"portal_news/service/impl"
 )
 
 type GoogleApiInfo struct {
@@ -15,11 +15,11 @@ type GoogleApiInfo struct {
 
 func SetOauthGoogleConfig() {
 	OauthGoogleInfo, _ := GetOauthGoogleInfo()
-	service.OauthGoogleConfig.RedirectURL = "http://localhost:8080/login/google-oauth/callback"
-	service.OauthGoogleConfig.ClientID = OauthGoogleInfo.ID
-	service.OauthGoogleConfig.ClientSecret = OauthGoogleInfo.Pass
-	service.OauthGoogleConfig.Scopes = []string{"https://www.googleapis.com/auth/userinfo.email"}
-	service.OauthGoogleConfig.Endpoint = google.Endpoint
+	impl.OauthGoogleConfig.RedirectURL = "http://localhost:8080/login/google-oauth/callback"
+	impl.OauthGoogleConfig.ClientID = OauthGoogleInfo.ID
+	impl.OauthGoogleConfig.ClientSecret = OauthGoogleInfo.Pass
+	impl.OauthGoogleConfig.Scopes = []string{"https://www.googleapis.com/auth/userinfo.email"}
+	impl.OauthGoogleConfig.Endpoint = google.Endpoint
 }
 
 func GetOauthGoogleInfo() (*GoogleApiInfo, error) {

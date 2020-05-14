@@ -1,15 +1,16 @@
-package service
+package impl
 
 import (
 	"portal_news/domain/model"
 	"portal_news/domain/repository_interface"
+	"portal_news/service"
 )
 
 type userService struct {
 	userRepository   repository_interface.UserRepository
 }
 
-func NewUserService(userRepository repository_interface.UserRepository) UserService {
+func NewUserService(userRepository repository_interface.UserRepository) service.UserService {
 	userService := userService{userRepository: userRepository}
 
 	return &userService

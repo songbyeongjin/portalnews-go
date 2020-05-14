@@ -1,7 +1,8 @@
-package service
+package impl
 
 import (
 	"portal_news/domain/repository_interface"
+	"portal_news/service"
 )
 
 type myPageService struct {
@@ -9,20 +10,20 @@ type myPageService struct {
 	newsRepository repository_interface.NewsRepository
 }
 
-func NewMyPageService(reviewRepository repository_interface.ReviewRepository, newsRepository repository_interface.NewsRepository) MyPageService {
+func NewMyPageService(reviewRepository repository_interface.ReviewRepository, newsRepository repository_interface.NewsRepository) service.MyPageService {
 	myPageService := myPageService{
 		reviewRepository : reviewRepository,
 		newsRepository: newsRepository}
 	return &myPageService
 }
 
-func (m *myPageService) GetReviewByUserId(userId string) *[]DisplayReviewTemplate{
+func (m *myPageService) GetReviewByUserId(userId string) *[]service.DisplayReviewTemplate {
 	reviews := m.reviewRepository.FindByUserIdOrderByDateDESC(userId)
 
-	reviewTemplates := &[]DisplayReviewTemplate{}
+	reviewTemplates := &[]service.DisplayReviewTemplate{}
 
 	for _, r := range *reviews {
-		reviewTemplate := DisplayReviewTemplate{}
+		reviewTemplate := service.DisplayReviewTemplate{}
 
 		reviewTemplate.NewsUrl = r.NewsUrl
 		reviewTemplate.Title = r.Title

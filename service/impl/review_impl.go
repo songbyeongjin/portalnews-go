@@ -1,10 +1,11 @@
-package service
+package impl
 
 import (
 	"fmt"
 	"portal_news/common"
 	"portal_news/domain/model"
 	"portal_news/domain/repository_interface"
+	"portal_news/service"
 	"time"
 )
 
@@ -13,7 +14,7 @@ type reviewService struct {
 	newsRepository   repository_interface.NewsRepository
 }
 
-func NewReviewService(reviewRepository repository_interface.ReviewRepository, newsRepository repository_interface.NewsRepository) ReviewService {
+func NewReviewService(reviewRepository repository_interface.ReviewRepository, newsRepository repository_interface.NewsRepository) service.ReviewService {
 	reviewService := reviewService{
 		reviewRepository: reviewRepository,
 		newsRepository: newsRepository}
@@ -21,8 +22,8 @@ func NewReviewService(reviewRepository repository_interface.ReviewRepository, ne
 	return &reviewService
 }
 
-func (r *reviewService) GetReviewByNewsUrlAndUserId(userID string, newsUrl string) (*CreateReviewTemplate, bool) {
-	createReviewTemplate := &CreateReviewTemplate{}
+func (r *reviewService) GetReviewByNewsUrlAndUserId(userID string, newsUrl string) (*service.CreateReviewTemplate, bool) {
+	createReviewTemplate := &service.CreateReviewTemplate{}
 
 	news := r.newsRepository.FindFirstByUrl(newsUrl)
 	if news == nil {
@@ -50,7 +51,7 @@ func (r *reviewService) GetReviewByNewsUrlAndUserId(userID string, newsUrl strin
 	return createReviewTemplate, modifyMode
 }
 
-func (r *reviewService) PostReview(jsonBody *JsonBody, userID string){
+func (r *reviewService) PostReview(jsonBody *service.JsonBody, userID string){
 	review := r.reviewRepository.FindFirstByNewsUrlAndUserId(jsonBody.NewsUrl, userID)
 	if review != nil {
 		r.reviewRepository.Update(review, map[string]interface{}{"title": jsonBody.ReviewTitle, "content": jsonBody.ReviewContent})
@@ -66,7 +67,7 @@ func (r *reviewService) PostReview(jsonBody *JsonBody, userID string){
 	}
 }
 
-func (r *reviewService) UpdateReview(url, userID string, jsonBody *JsonBody) error{
+func (r *reviewService) UpdateReview(url, userID string, jsonBody *service.JsonBody) error{
 	review := r.reviewRepository.FindFirstByNewsUrlAndUserId(url, userID)
 
 	if review == nil {

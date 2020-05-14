@@ -7,6 +7,7 @@ import (
 	"portal_news/common"
 	"portal_news/domain/model"
 	"portal_news/service"
+	"portal_news/service/impl"
 )
 
 type LoginController struct {
@@ -74,7 +75,7 @@ func (l LoginController) LoginPost(c *gin.Context) {
 
 func (l LoginController) GoogleOauthGet(c *gin.Context) {
 	state := l.LoginService.OauthSetCookie(c)
-	url := service.OauthGoogleConfig.AuthCodeURL(state)
+	url := impl.OauthGoogleConfig.AuthCodeURL(state)
 
 	c.Redirect(http.StatusTemporaryRedirect, url)
 }

@@ -1,4 +1,4 @@
-package service
+package impl
 
 import (
 	"encoding/base64"
@@ -13,6 +13,7 @@ import (
 	"portal_news/common"
 	"portal_news/domain/model"
 	"portal_news/domain/repository_interface"
+	"portal_news/service"
 )
 var OauthGoogleConfig oauth2.Config
 
@@ -20,7 +21,7 @@ type loginService struct {
 	userRepository repository_interface.UserRepository
 }
 
-func NewLoginService(userRepository repository_interface.UserRepository) LoginService {
+func NewLoginService(userRepository repository_interface.UserRepository) service.LoginService {
 	loginService := loginService{userRepository: userRepository}
 
 	return &loginService
@@ -64,7 +65,7 @@ func (l *loginService) OauthSetCookie(c *gin.Context) string{
 	return state
 }
 
-func (l *loginService) GetGoogleUserInfo(c *gin.Context, code string) (*OauthGoogleUser, error){
+func (l *loginService) GetGoogleUserInfo(c *gin.Context, code string) (*service.OauthGoogleUser, error){
 	token, tokenErr := OauthGoogleConfig.Exchange(c, code)
 
 	if tokenErr != nil {
@@ -78,7 +79,7 @@ func (l *loginService) GetGoogleUserInfo(c *gin.Context, code string) (*OauthGoo
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
-	googleUser := &OauthGoogleUser{}
+	googleUser := &service.OauthGoogleUser{}
 
 	jsonErr := json.Unmarshal(body, googleUser)
 	if jsonErr != nil {
@@ -88,7 +89,7 @@ func (l *loginService) GetGoogleUserInfo(c *gin.Context, code string) (*OauthGoo
 	return googleUser, nil
 }
 
-func (l *loginService) GoogleUserDbInsert(googleUser *OauthGoogleUser)*model.User{
+func (l *loginService) GoogleUserDbInsert(googleUser *service.OauthGoogleUser)*model.User{
 	user := &model.User{
 		UserId: googleUser.Email,
 		Oauth:  "google",

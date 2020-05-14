@@ -1,14 +1,15 @@
-package service
+package impl
 
 import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"portal_news/service"
 )
 
 type logoutService struct {
 }
 
-func NewLogoutService() LogoutService {
+func NewLogoutService() service.LogoutService {
 	logoutService := logoutService{}
 	return &logoutService
 }
@@ -19,3 +20,4 @@ func (l *logoutService) DeleteSession(c *gin.Context) error{
 	err := session.Save()
 	return err
 }
+

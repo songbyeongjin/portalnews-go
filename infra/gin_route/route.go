@@ -7,13 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"portal_news/common"
-	c "portal_news/controller"
+	"portal_news/controller"
 	"portal_news/infra/gin_route/middle_ware"
 	"portal_news/injection"
 )
 
 func SetRouter() *gin.Engine{
-
 	rankingNewsR := injection.InjectRankingNewsRepository()
 	reviewR := injection.InjectReviewRepository()
 	userR := injection.InjectUserRepository()
@@ -36,7 +35,6 @@ func SetRouter() *gin.Engine{
 	logoutC := injection.InjectLogoutController(logoutS)
 	mainC := injection.InjectMainController()
 
-
 	r := GetRouter(
 		mainC,
 		rankingNewsC,
@@ -52,14 +50,14 @@ func SetRouter() *gin.Engine{
 
 
 func GetRouter(
-	mainController c.MainController,
-	rankingNewsController c.RankingNewsController,
-	reviewController c.ReviewController,
-	myPageController c.MyPageController,
-	searchController c.SearchController,
-	loginController c.LoginController,
-	logoutController c.LogoutController,
-	userController c.UserController) *gin.Engine {
+	mainController controller.MainController,
+	rankingNewsController controller.RankingNewsController,
+	reviewController controller.ReviewController,
+	myPageController controller.MyPageController,
+	searchController controller.SearchController,
+	loginController controller.LoginController,
+	logoutController controller.LogoutController,
+	userController controller.UserController) *gin.Engine {
 
 	router := gin.Default()
 
