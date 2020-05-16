@@ -8,32 +8,37 @@ import (
 	"html/template"
 	"portal_news/common"
 	"portal_news/controller"
+	"portal_news/infra/db"
+	"portal_news/infra/db/repository_impl"
 	"portal_news/infra/gin_route/middle_ware"
-	"portal_news/injection"
+	"portal_news/service/impl"
 )
 
 func SetRouter() *gin.Engine{
-	rankingNewsR := injection.InjectRankingNewsRepository()
-	reviewR := injection.InjectReviewRepository()
-	userR := injection.InjectUserRepository()
-	newsR := injection.InjectNewsRepository()
 
-	rankingNewsS := injection.InjectRankingNewsService(rankingNewsR)
-	reviewS := injection.InjectReviewService(reviewR,newsR)
-	searchS := injection.InjectSearchService(newsR)
-	userS := injection.InjectUserService(userR)
-	logoutS := injection.InjectLogoutService()
-	loginS := injection.InjectLoginService(userR)
-	myPageS := injection.InjectMyPageService(reviewR, newsR)
 
-	rankingNewsC := injection.InjectRankingNewsController(rankingNewsS)
-	reviewC := injection.InjectReviewController(reviewS)
-	myPageC := injection.InjectMyPageController(myPageS)
-	searchC := injection.InjectSearchController(searchS)
-	userC := injection.InjectUserController(userS)
-	loginC := injection.InjectLoginController(loginS)
-	logoutC := injection.InjectLogoutController(logoutS)
-	mainC := injection.InjectMainController()
+	psDb := db.NewDbHandler()
+	rankingNewsR := repository_impl.NewRankingNewsRepository(psDb)
+	reviewR := repository_impl.NewReviewRepository(psDb)
+	userR := repository_impl.NewUserRepository(psDb)
+	newsR := repository_impl.NewNewsRepository(psDb)
+
+	rankingNewsS := impl.NewRankingNewsService(rankingNewsR)
+	reviewS := impl.NewReviewService(reviewR, newsR)
+	searchS := impl.NewSearchService(newsR)
+	userS := impl.NewUserService(userR)
+	logoutS := impl.NewLogoutService()
+	loginS := impl.NewLoginService(userR)
+	myPageS := impl.NewMyPageService(reviewR, newsR)
+
+	rankingNewsC := controller.NewRankingNewsController(rankingNewsS)
+	reviewC := controller.NewReviewController(reviewS)
+	myPageC := controller.NewMyPageController(myPageS)
+	searchC := controller.NewSearchController(searchS)
+	userC := controller.NewUserController(userS)
+	loginC := controller.NewLoginController(loginS)
+	logoutC := controller.NewLogoutController(logoutS)
+	mainC := controller.NewMainController()
 
 	r := GetRouter(
 		mainC,
