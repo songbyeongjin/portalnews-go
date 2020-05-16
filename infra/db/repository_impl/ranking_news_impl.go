@@ -7,10 +7,10 @@ import (
 )
 
 type RankingNewsRepository struct {
-	dbHandler db.Handler
+	dbHandler *db.Handler
 }
 
-func NewRankingNewsRepository(dbHandler db.Handler) repository_interface.RankingNewsRepository {
+func NewRankingNewsRepository(dbHandler *db.Handler) repository_interface.RankingNewsRepository {
 	rankingNewsRepository := RankingNewsRepository{dbHandler}
 	return &rankingNewsRepository
 }
