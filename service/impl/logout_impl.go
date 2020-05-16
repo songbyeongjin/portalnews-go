@@ -14,10 +14,9 @@ func NewLogoutService() service.LogoutService {
 	return &logoutService
 }
 
-func (l *logoutService) DeleteSession(c *gin.Context) error{
+func (l *logoutService) ClearSession(c *gin.Context) error{
 	session := sessions.Default(c)
 	session.Clear()
 	err := session.Save()
 	return err
 }
-

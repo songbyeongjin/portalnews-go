@@ -17,7 +17,7 @@ func NewLogoutController(logoutService service.LogoutService) LogoutController {
 }
 
 func (l LogoutController) LogoutGet(c *gin.Context) {
-	if l.LogoutService.DeleteSession(c) != nil {
+	if l.LogoutService.ClearSession(c) != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "session delete failed"})
 		return
 	}

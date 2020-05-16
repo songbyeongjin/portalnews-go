@@ -3,5 +3,5 @@ package service
 import "github.com/gin-gonic/gin"
 
 type LogoutService interface {
-	DeleteSession(c *gin.Context) error
+	ClearSession(c *gin.Context) error
 }
