@@ -11,18 +11,18 @@ import (
 	"testing"
 )
 
+
+
 func TestNewLogoutService(t *testing.T) {
 	assertion := assert.New(t)
 
-	logoutS := NewLogoutService()
 
-	assertion.NotNil(logoutS)
-	assertion.IsType(new(logoutService), logoutS)
+	assertion.NotNil(testLogoutS)
+	assertion.IsType(new(logoutService), testLogoutS)
 }
 
 func TestClearSession(t *testing.T) {
 	assertion := assert.New(t)
-	logoutS := NewLogoutService()
 
 	r := gin.Default()
 	store := cookie.NewStore([]byte(common.SessionKey))
@@ -30,10 +30,10 @@ func TestClearSession(t *testing.T) {
 
 
 	r.GET("/clear-session", func(context *gin.Context) {
-		assertion.Nil(logoutS.ClearSession(context))
+		assertion.Nil(testLogoutS.ClearSession(context))
 	})
 
-	res2 := httptest.NewRecorder()
-	req2, _ := http.NewRequest("GET", "/clear-session", nil)
-	r.ServeHTTP(res2, req2)
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/clear-session", nil)
+	r.ServeHTTP(res, req)
 }
