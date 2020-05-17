@@ -57,6 +57,28 @@ func NewDbHandler() *Handler {
 		return nil
 	}
 	dbHandler.Conn, err = gorm.Open(DbConnector.Dialect, DbConnector.GetConnectString())
+
+	if err != nil{
+		log.Print(err)
+		return nil
+	}
+
+	return dbHandler
+}
+
+func NewTestDbHandler() *Handler {
+	dbHandler := &Handler{}
+	DbConnector, err := getDbConnector()
+
+
+	if err != nil{
+		log.Print(err)
+		return nil
+	}
+
+	DbConnector.Dbname = DbConnector.Dbname + "_test"
+	dbHandler.Conn, err = gorm.Open(DbConnector.Dialect, DbConnector.GetConnectString())
+
 	if err != nil{
 		log.Print(err)
 		return nil
