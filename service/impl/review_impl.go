@@ -26,7 +26,7 @@ func (r *reviewService) GetReviewByNewsUrlAndUserId(userID string, newsUrl strin
 	createReviewTemplate := &service.CreateReviewTemplate{}
 
 	news := r.newsRepository.FindFirstByUrl(newsUrl)
-	if news == nil {
+	if news.Id == 0 {
 		return nil, false
 	}
 
