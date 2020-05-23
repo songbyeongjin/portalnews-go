@@ -25,7 +25,7 @@ func (d *Connector) GetConnectString() string {
 //Set Db information from yaml
 func getDbConnector() (*Connector, error) {
 	//temporary path for debug mode
-	buf, err := ioutil.ReadFile(`C:\Users\SONG\Documents\study\go\src\portal_news\db_info.yaml`)
+	buf, err := ioutil.ReadFile(`./db_info.yaml`)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err

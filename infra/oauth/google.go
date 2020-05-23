@@ -13,18 +13,24 @@ type GoogleApiInfo struct {
 	Pass string `yaml:"oauth_google_pass"`
 }
 
-func SetOauthGoogleConfig() {
-	OauthGoogleInfo, _ := GetOauthGoogleInfo()
+func SetOauthGoogleConfig() error{
+	OauthGoogleInfo, err := GetOauthGoogleInfo()
+	if err != nil{
+		fmt.Println(err)
+		return err
+	}
+
 	impl.OauthGoogleConfig.RedirectURL = "http://localhost:8080/login/google-oauth/callback"
 	impl.OauthGoogleConfig.ClientID = OauthGoogleInfo.ID
 	impl.OauthGoogleConfig.ClientSecret = OauthGoogleInfo.Pass
 	impl.OauthGoogleConfig.Scopes = []string{"https://www.googleapis.com/auth/userinfo.email"}
 	impl.OauthGoogleConfig.Endpoint = google.Endpoint
+	return nil
 }
 
 func GetOauthGoogleInfo() (*GoogleApiInfo, error) {
 	//temporary path for debug mode
-	buf, err := ioutil.ReadFile(`C:\Users\SONG\Documents\study\go\src\portal_news\oauth_google.yaml`)
+	buf, err := ioutil.ReadFile(`./oauth_google.yaml`)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err

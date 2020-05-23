@@ -70,7 +70,7 @@ func GetRouter(
 	router.Use(sessions.Sessions("mySession", store))
 
 	//temporary path for debug mode
-	router.Static("/assets", `C:\Users\SONG\Documents\study\go\src\portal_news\assets`)
+	router.Static("/assets", `..\..\assets`)
 
 	//set render
 	router.HTMLRender = getRender()
@@ -134,7 +134,7 @@ func GetRouter(
 
 //Create render for using template block
 func getRender() multitemplate.Renderer {
-	rootPath := `C:\Users\SONG\Documents\study\go\src\portal_news\templates\`
+	rootPath := `./templates/`
 	homePath := rootPath + `home.tmpl`
 	newsPath := rootPath + `news.tmpl`
 	loginPath := rootPath + `login.tmpl`
@@ -143,7 +143,7 @@ func getRender() multitemplate.Renderer {
 	myPagePath := rootPath + `mypage.tmpl`
 	searchPath := rootPath + `search.tmpl`
 
-	defineRootPath := `C:\Users\SONG\Documents\study\go\src\portal_news\templates\define\`
+	defineRootPath := `./templates/define/`
 	defineHeaderPath := defineRootPath + `define_header.tmpl`
 	defineNavigationPath := defineRootPath + `define_navigation.tmpl`
 	defineLoginPath := defineRootPath + `define_login.tmpl`

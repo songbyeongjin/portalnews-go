@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"io"
@@ -12,7 +13,11 @@ import (
 func main() {
 	// *** Set Oauth
 
-	oauth.SetOauthGoogleConfig()
+	err := oauth.SetOauthGoogleConfig()
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
 
 	// Set Oauth ***
 

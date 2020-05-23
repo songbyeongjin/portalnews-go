@@ -10,5 +10,6 @@ require (
 	github.com/lib/pq v1.5.2
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
+	golang.org/x/tools v0.0.0-20200522201501-cb1345f3a375 // indirect
 	gopkg.in/yaml.v2 v2.2.8
 )
