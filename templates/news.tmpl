@@ -67,12 +67,12 @@
          {{ if eq $tempLoginFlag true }}
            <button onclick="location.href='/review/{{.Url}}'" id="review-btn" class="btn btn-{{ $newsColor }} btn-sm"><i class="fas fa-pencil-alt"></i> REVIEW</button>
          {{ end }}
-         <hr>
          </div>
          <div class="resume-date text-md-right">
            <span class="text-primary">{{.Date.Format "2006-01-02"}}</span>
          </div>
        </div>
+       <hr>
       {{end}}
     </div>
   </section>

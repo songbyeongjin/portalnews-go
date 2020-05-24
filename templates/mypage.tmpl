@@ -28,11 +28,11 @@
                   <a href="/review/{{$v.NewsUrl}}" class="btn btn-sm btn-info"> <i class="fas fa-edit"></i> MODIFY</a>
                   <button id="delete-btn" class="btn btn-sm btn-danger" onclick="reviewDelete({{$i}});"><i class="far fa-trash-alt"></i> DELETE</a></button>
                 </div>
-             <hr>
              </div>
              <div class="resume-date text-md-right">
                <span class="text-primary">{{$v.Date.Format "2006-01-02 15:04:05"}}</span>
              </div>
+             <hr>
            </div>
       {{end}}
     </div>
