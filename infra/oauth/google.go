@@ -20,7 +20,7 @@ func SetOauthGoogleConfig() error{
 		return err
 	}
 
-	impl.OauthGoogleConfig.RedirectURL = "http://localhost:8080/login/google-oauth/callback"
+	impl.OauthGoogleConfig.RedirectURL = "http://korea-portal-news.com/login/google-oauth/callback"
 	impl.OauthGoogleConfig.ClientID = OauthGoogleInfo.ID
 	impl.OauthGoogleConfig.ClientSecret = OauthGoogleInfo.Pass
 	impl.OauthGoogleConfig.Scopes = []string{"https://www.googleapis.com/auth/userinfo.email"}

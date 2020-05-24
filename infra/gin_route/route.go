@@ -69,8 +69,7 @@ func GetRouter(
 	store := cookie.NewStore([]byte(common.SessionKey))
 	router.Use(sessions.Sessions("mySession", store))
 
-	//temporary path for debug mode
-	router.Static("/assets", `..\..\assets`)
+	router.Static("/assets", "./assets")
 
 	//set render
 	router.HTMLRender = getRender()
