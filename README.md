@@ -9,7 +9,7 @@
 https://korea-portal-news.com/
 
 ## 使用技術
-1. Go + Gin(web framework)
+1. Go + Gin(web framework)　clean architecture適用
 2. AWS (Route53, ALB, EC2, RDS, LAMBDA, ClOUDWATCH, ElasticBeanstalks)
 3. circleci 追加予定※2020.05.28未適用　
 4. Bootstrap, ajax, jquery
