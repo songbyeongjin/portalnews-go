@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"fmt"
 	"log"
 	"net/http"
 	"portal_news/common"
@@ -38,17 +39,10 @@ func (l LoginController)LoginGet(c *gin.Context) {
 }
 
 func (l LoginController) LoginPost(c *gin.Context) {
-	userId := c.PostForm("userId")
-	userPass := c.PostForm("userPass")
-
-	user := &model.User{
-		UserId:   userId,
-		UserPass: userPass,
-	}
-
-	//validation check
-	if !l.LoginService.UserValidation(user) {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "parameter error"})
+	user := &model.User{}
+	if err := c.Bind(user); err != nil{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"binding error": err.Error()})
+		fmt.Println(err)
 		return
 	}
 

@@ -13,7 +13,6 @@ type OauthGoogleUser struct {
 }
 
 type LoginService interface {
-	UserValidation(user *model.User) bool
 	UserNotExistCheck(user *model.User) (bool, *model.User)
 	CreateSession(c *gin.Context, user *model.User) error
 	OauthSetCookie(c *gin.Context) string

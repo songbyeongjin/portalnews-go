@@ -27,17 +27,6 @@ func NewLoginService(userRepository repository_interface.UserRepository) service
 	return &loginService
 }
 
-func (l *loginService) UserValidation(user *model.User) bool{
-	if user == nil {
-		return false
-	}
-
-	if len(user.UserId) == 0 || len(user.UserPass) == 0 {
-		return false
-	}
-
-	return true
-}
 
 func (l *loginService) UserNotExistCheck(user *model.User) (bool, *model.User){
 	userRet := l.userRepository.FindFirstByUserId(user.UserId)

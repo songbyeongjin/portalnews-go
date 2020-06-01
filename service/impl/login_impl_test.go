@@ -21,34 +21,6 @@ func TestNewLoginService(t *testing.T) {
 	assertion.IsType(new(loginService), testLoginS)
 }
 
-func TestUserValidation(t *testing.T){
-	assertion := assert.New(t)
-
-	assertion.False(testLoginS.UserValidation(nil))
-
-	user := &model.User{
-	}
-
-	user.UserId = "testId"
-	user.UserPass = "testPass"
-	user.Oauth = "testOauth"
-	assertion.True(testLoginS.UserValidation(user))
-
-	user.UserId = ""
-	user.UserPass = "testPass"
-	user.Oauth = "testOauth"
-	assertion.False(testLoginS.UserValidation(user))
-
-	user.UserId = "testId"
-	user.UserPass = ""
-	user.Oauth = "testOauth"
-	assertion.False(testLoginS.UserValidation(user))
-
-	user.UserId = "testId"
-	user.UserPass = "testPass"
-	user.Oauth = ""
-	assertion.True(testLoginS.UserValidation(user))
-}
 
 func TestUserNotExistCheck(t *testing.T){
 	assertion := assert.New(t)

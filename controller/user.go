@@ -18,13 +18,12 @@ func NewUserController(userService service.UserService) UserController {
 }
 
 func (u UserController) SignUpPost(c *gin.Context) {
-	userId := c.PostForm("userId")
-	userPass := c.PostForm("userPass")
-
-	user := &model.User{
-		UserId:   userId,
-		UserPass: userPass,
+	user := &model.User{}
+	if err := c.Bind(user); err != nil{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"binding error": err.Error()})
+		return
 	}
+
 
 	isExist := u.UserService.UserExistCheck(user)
 	if isExist {
