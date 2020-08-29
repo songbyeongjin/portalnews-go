@@ -7,6 +7,7 @@
 
 ## URL
 https://korea-portal-news.com/
+※現在、サーバー停止状態です。
 
 ## 使用技術
 1. Go + Gin(web framework)　clean architecture適用
